@@ -18,7 +18,6 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
-    bot.familiada = cl.Familiada()
 
 @bot.command()
 async def familiada(ctx):
