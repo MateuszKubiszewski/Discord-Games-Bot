@@ -2,6 +2,7 @@ import os
 import discord
 import random
 
+from discord.ext import commands
 from dotenv import load_dotenv
 
 import resources as res
@@ -33,7 +34,7 @@ async def familiada(ctx):
     await ctx.send(tosend)
 
 @bot.command()
-async def zbierz_druzyne(ctx, *members):
+async def zbierz_druzyne(ctx, members: commands.Greedy[discord.Member]):
     number = random.randint(0, len(res.Colors) - 1)
     while number in bot.used_colors:
         number = random.randint(0, len(res.Questions) - 1)
@@ -87,11 +88,11 @@ async def pytanie(ctx):
                 bot.current_answers.append(answer) 
         # finding the team to which the points should be added - and adding them
         for team in bot.teams:
-            if guess.author.name in team.members.keys():
-                team.members[guess.author.name] += score
+            if guess.author in team.members:
+                team.members[guess.author] += score
                 team.points += score
         #something to send after an aswer has been guessed
-        await ctx.send(f"```\nDobra odpowiedź! Ilość punktów: {score}```")
+        await ctx.send(f"```\nDobra odpowiedź {guess.author.display_name}! Ilość punktów: {score}```")
     #something to send after all answers have been guessed
     await ctx.send("```\nWszystkie odpowiedzi zostały odgadnięte!```")
     await ctx.send(question.printAnswered(bot.current_answers))

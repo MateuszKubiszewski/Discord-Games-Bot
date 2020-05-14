@@ -21,8 +21,9 @@ class Team:
     def __str__(self):
         ret = f"```\n{self.name}\n"
         for member, score in self.members.items():
-            ret += f"{member}: {score}\n"
+            ret += f"{member.display_name}: {score}\n"
         ret += f"Łączna liczba punktów: {self.points}\n```"
+        print(self.members.keys())
         return ret
 
 class Question:
