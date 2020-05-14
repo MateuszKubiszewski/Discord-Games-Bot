@@ -1,15 +1,8 @@
 from discord.ext import commands
 
 # TO DO
-# str magic method for Familiada, Team, Question
-# functions to clean the Bot class, proclaim the winner
-
 # wysietlanie:
-# wszystkich teamow po inicjalizacji Familiady
-# punktacji przed i po pytaniu
-# punktacji pytania po zgadnieciu wszystkich odpowiedzi
-# punktacja na zadanie
-# podpowiedzi < no powodzenia zycze
+# podpowiedzi < no powodzenia zycze [moze dodac do wyswietlania w funkcji toString?]
 
 class Familiada(commands.Bot):
     def __init__(self):
@@ -24,11 +17,31 @@ class Team:
         self.name = _name
         self.members = _members
         self.points = 0
+    # works for print(team) <=> str(team)
+    def __str__(self):
+        ret = f"```\n{self.name}\n"
+        for member, score in self.members.items():
+            ret += f"{member}: {score}\n"
+        ret += f"Łączna liczba punktów: {self.points}\n```"
+        return ret
 
 class Question:
     def __init__(self, _content, answers_list, points_list):
         self.content = _content
         self.answers = answers_list
         self.points = points_list
-
-
+    def __str__(self):
+        ret = f"```\n{self.content}\n"
+        for index, answer in enumerate(self.answers, start = 0):
+            ret += f"{index + 1}. ---------- \n"
+        ret += "```"
+        return ret
+    def printAnswered(self, answered):
+        ret = f"```\n{self.content}\n"
+        for index, answer in enumerate(self.answers, start = 0):
+            if answer in answered:
+                ret += f"{index + 1}. {self.answers[index]}: {self.points[index]} \n"
+            else:
+                ret += f"{index + 1}. ---------- \n"
+        ret += "```"
+        return ret

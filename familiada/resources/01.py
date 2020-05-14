@@ -11,7 +11,7 @@ Answers = [
     ['lama', 'owca', 'stado', 'wataha'],
     ['nie istnieje', 'nie zdradza', 'nie pije', 'nie sprzecza sie'],
     ['selfie', 'zakopuje w ogrodku', 'bawie sie nimi w dom', 'dzwonie po policje'],
-    ['dupa', 'cyckami', 'lysina', 'przykladem', 'oczami', 'latarka']
+    ['tylkiem', 'biustem', 'lysina', 'przykladem', 'oczami', 'latarka']
 ]
 
 Points = [
