@@ -7,6 +7,11 @@ __pycache__/
 env_Los-Donaldos/
 Od_Maxia/
 .vscode/
+__init__.py
+resources/
+resources.py
+familiada_skriny.png
+punkty.py
 
 # C extensions
 *.so
