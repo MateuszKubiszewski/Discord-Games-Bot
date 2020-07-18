@@ -12,7 +12,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))
-bot.add_cog(hang.Hangman(bot))
+# bot.add_cog(hang.Hangman(bot))
 
 @bot.event
 async def on_ready():
