@@ -138,7 +138,7 @@ class Familiada(commands.Cog):
     
     @commands.command()
     async def familiada_pomoc(self, ctx):
-        await ctx.send("https://i.postimg.cc/gk80YgYC/familiada-skriny.png")
+        await ctx.send("https://i.imgur.com/oJC4RQR.png")
     
     def ordnung_muss_sein(self):
         self.participants.clear()
