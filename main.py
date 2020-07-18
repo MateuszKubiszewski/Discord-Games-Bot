@@ -5,7 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from familiada import commands as comms 
-from hangman import hangman as hang
+# from hangman import hangman as hang
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
