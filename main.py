@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 from familiada import commands as comms 
 # from hangman import hangman as hang
 
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+# load_dotenv()
+# TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.environ["ACCESS_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))
