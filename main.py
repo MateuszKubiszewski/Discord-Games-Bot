@@ -5,6 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 from familiada import commands as comms 
+from utility import commands as u_comms
 # from hangman import hangman as hang
 
 # load_dotenv()
@@ -13,6 +14,7 @@ TOKEN = os.environ["ACCESS_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))
+bot.add_cog(u_comms.Utility(bot))
 # bot.add_cog(hang.Hangman(bot))
 
 @bot.event

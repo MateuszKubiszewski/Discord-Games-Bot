@@ -9,7 +9,7 @@ Od_Maxia/
 .vscode/
 resources/
 familiada_skriny.png
-punkty.py
+hangman/
 
 # C extensions
 *.so
