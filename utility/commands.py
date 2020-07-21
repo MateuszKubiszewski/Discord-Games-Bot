@@ -9,18 +9,22 @@ class Utility(commands.Cog):
    
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def dodaj_punkt(self, ctx, gracze: commands.Greedy[discord.Member]):
+    async def dodaj_punkt(self, ctx, new_members: commands.Greedy[discord.Member]):
         for member in new_members:
             if member not in self.punktyTGS:
                 self.punktyTGS[member] = 1
             else:
                 self.punktyTGS[member] += 1
-        print(self.punktyTGS)
+        logs = ""
+        for k, v in self.punktyTGS.items():
+            logs += f"{k.display_name}: {v}    "
+        print(logs)
     
     @commands.command()
     async def ranking_graczy(self, ctx):
         sorted_members = sorted(self.punktyTGS.items(), key=lambda x: x[1], reverse=True)
-        toSend = "'''\nRanking:\n"
+        toSend = "```\nRanking:\n"
         for index, member in enumerate(sorted_members, start=0):
             toSend += f"{index + 1}. {member[0].display_name}: {member[1]}\n"
+        toSend += "```"
         await ctx.send(toSend)
