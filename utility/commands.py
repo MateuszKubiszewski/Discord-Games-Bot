@@ -22,8 +22,24 @@ class Utility(commands.Cog):
         logs = ""
         for k, v in self.punktyTGS.items():
             logs += f"{k}: {v}    "
-        with open('punkty.txt', 'w') as file:
-            file.write(json.dumps(self.punktyTGS))
+        # with open('punkty.txt', 'w') as file:
+        #     file.write(json.dumps(self.punktyTGS))
+        print(logs)
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def zabierz_punkt(self, ctx, new_members: commands.Greedy[discord.Member]):
+        for member in new_members:
+            toadd = str(member)
+            if toadd not in self.punktyTGS:
+                continue
+            else:
+                self.punktyTGS[toadd] -= 1
+        logs = ""
+        for k, v in self.punktyTGS.items():
+            logs += f"{k}: {v}    "
+        # with open('punkty.txt', 'w') as file:
+        #     file.write(json.dumps(self.punktyTGS))
         print(logs)
     
     @commands.command()

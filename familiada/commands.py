@@ -122,8 +122,8 @@ class Familiada(commands.Cog):
         await ctx.send(tosend)
         self.ordnung_muss_sein()
         print(self.asked_questions)
-        with open('asked-questions.txt', 'w') as file:
-            json.dump(self.asked_questions, file)
+        # with open('asked-questions.txt', 'w') as file:
+        #     json.dump(self.asked_questions, file)
 
     @commands.command()
     async def punkty(self, ctx):
