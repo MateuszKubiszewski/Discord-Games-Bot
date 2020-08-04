@@ -24,7 +24,12 @@ Questions = [
     "Co zabieramy na plażę?",
     "Leży na biurku.",
     "Co rozwiązujemy chociaż tego nie zawiązujemy?",
-    "Co napełnia się gazem?"
+    "Co napełnia się gazem?",
+    "Jaki rok nie zaczyna się od pierwszego stycznia?",
+    "Jaki specjalny wagon może znajdować się w składzie pociągu?",
+    "Wąsate zwierze?",
+    "Czym może być pokryty dach?",
+    "Wymień elementy dekoracji wnętrz?",
 ]
 
 Answers = [
@@ -45,10 +50,15 @@ Answers = [
     ['dupa', 'krzesło', 'fotel', 'kanapa'],
     ['kot', 'pies', 'chomik'],
     ['gołąb', 'wróbel', 'sikorka'],
-    ['ręcznik', 'książkę', 'napój', 'krem do opalania'],
+    ['ręcznik', 'książkę', 'wodę', 'koc'],
     ['laptop', 'zeszyt', 'długopis', 'marihuana', 'szlugi'],
     ['zagadkę', 'krzyżówkę', 'zadanie', 'równanie', 'problem'],
-    ['butlę', 'zapalniczkę', 'bak', 'balon']
+    ['butlę', 'zapalniczkę', 'bak', 'balon'],
+    ['szkolny', 'akademicki', 'liturgiczny', 'żydowski'],
+    ['sypialny', 'pocztowy', 'restauracyjny', 'do przewozu rowerów'],
+    ['kot', 'mysz', 'tygrys', 'lew'],
+    ['dachówka', 'papa', 'blacha', 'eternit'],
+    ['zasłony', 'firanki', 'lampa', 'obraz']
 ]
 
 Hints = [
@@ -69,10 +79,15 @@ Hints = [
     ['siedziesz na niej xD', 'moze byc skladane', 'moze byc bujany', 'mozna sie tez na niej kimnac'],
     ['miau miau', 'hau hau', 'ma bardzo pojemne policzki'],
     ['obsrywa mi parapet', 'elemel(ek)', 'rich bitch [bogata jest]'],
-    ['coby sie wysuszyc i na nim polozyc', 'coby sobie poczytac', 'coby sie napic bo goraco', 'coby sie posmarowac to skora sie nie spiecze'],
+    ['coby sie wytrzec', 'coby sobie poczytac', 'coby sie napic bo goraco', 'coby sie na czyms polozyc'],
     ['przenosny konkuter', 'miejsce na notatki', 'cos do robienia notatek', '420', '20 w paczce, przynajmniej na start'],
     ['zadaje ja sfinks', 'lubie rozwiazac jedna na kiblu', 'jest ich duzo w podreczniku do matematyki', '... matematyczne', 'jak masz jakis to zbierasz wpierdol'],
-    ['do kuchenki gazowej', 'do odpalania szluga', 'w samochodzie', 'moze byc meteorologiczny']
+    ['do kuchenki gazowej', 'do odpalania szluga', 'w samochodzie', 'moze byc meteorologiczny'],
+    ['2 + 2 = 4', 'Alma Mater', 'publiczna forma kultu religijnego', 'Szalom!'],
+    ['chrapu chrap', 'lecą listy lecą', 'om nom nom nom', 'tam przechowasz swoje dwa kółka'],
+    ['duże i małe, dzikie i w domu', 'a kysz', 'strzeż się Mowgli', 'dzierży koronę'],
+    ['małe kawałki', 'nagrzewa się szybko', 'do widzenia', 'trzeba wymienić bo azbest'],
+    ['nie widać co się dzieje', 'białe i delikatne', 'jasno wszędzie!', 'namalowane, można oglądać']
 ]
 
 Points = [
@@ -92,13 +107,16 @@ Points = [
     [58, 26, 16],
     [47, 22, 19, 12],
     [58, 26, 16],
-    [47, 22, 19, 12],
-    [58, 26, 16],
     [58, 26, 16],
     [47, 22, 19, 12],
     [39, 19, 17, 15, 10],
     [39, 19, 17, 15, 10],
-    [47, 22, 19, 12]
+    [47, 22, 19, 12],
+    [30, 20, 10, 5],
+    [30, 20, 10, 5],
+    [30, 20, 10, 5],
+    [30, 20, 10, 5],
+    [30, 20, 10, 5]
 ]
 
 Puns = [

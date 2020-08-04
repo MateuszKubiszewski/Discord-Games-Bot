@@ -9,11 +9,11 @@ from utility import commands as u_comms
 # from hangman import hangman as hang
 
 # local run
-# load_dotenv()
-# TOKEN = os.getenv('DISCORD_TOKEN')
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 # heroku run
-TOKEN = os.environ["ACCESS_TOKEN"]
+# TOKEN = os.environ["ACCESS_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))

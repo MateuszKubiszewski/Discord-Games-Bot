@@ -1,5 +1,6 @@
 import discord
 import random
+import json
 from discord.ext import commands
 
 from . import resources as res
@@ -16,6 +17,8 @@ class Familiada(commands.Cog):
             self.questions.append(toAppend)
         self.asked_questions = [] # cos z tym trzeba zrobic
         # moze tablica z asked questions dla kazdego serwera, event handler na dolaczenie do serweru ktory dodaje serwer do listy?
+        with open('asked-questions.txt', 'r') as file:
+            self.asked_questions = json.load(file)
         self.used_colors = []
         self.current_question = -1
 
@@ -39,7 +42,6 @@ class Familiada(commands.Cog):
         membs = {}
         for member in members:
             self.participants.append(member)
-
             membs[member] = 0
         toappend = cl.Team(res.Colors[number], membs)
         self.teams.append(toappend)
@@ -84,7 +86,7 @@ class Familiada(commands.Cog):
             if guess.author not in self.participants:
                 continue
             guess_content = guess.content.lower()
-            if guess_content not in question.answers or guess.content in self.current_answers:
+            if guess_content not in question.answers or guess_content in self.current_answers:
                 continue
             # finding the amount of points for the answer
             for index, answer in enumerate(question.answers, start = 0):
@@ -100,9 +102,9 @@ class Familiada(commands.Cog):
             #something to send after an aswer has been guessed
             await ctx.send(f"```\nDobra odpowiedź {guess.author.display_name}! {score} punktów za {guess_content}.```")
         #something to send after all answers have been guessed
-        self.current_question = -1
         await ctx.send("```\nWszystkie odpowiedzi zostały odgadnięte!```")
-        await ctx.send(question.printAnswered(current_answers))
+        await self.print_question(ctx, self.current_question)
+        self.current_question = -1
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -120,21 +122,14 @@ class Familiada(commands.Cog):
         await ctx.send(tosend)
         self.ordnung_muss_sein()
         print(self.asked_questions)
+        with open('asked-questions.txt', 'w') as file:
+            json.dump(self.asked_questions, file)
 
     @commands.command()
     async def punkty(self, ctx):
         if self.current_question == -1:
             return
-        # await ctx.send(self.questions[self.current_question].printAnswered(self.current_answers))
-        question = self.questions[self.current_question]
-        ret = f"```\n{question.content}\n"
-        for index, answer in enumerate(question.answers, start = 0):
-            if answer in self.current_answers:
-                ret += f"{index + 1}. {question.answers[index]}: {question.points[index]} \n"
-            else:
-                ret += f"{index + 1}. ---------- {res.Hints[self.current_question][index]} \n"
-        ret += "```"
-        await ctx.send(ret)
+        await self.print_question(ctx, self.current_question)
     
     @commands.command()
     async def familiada_pomoc(self, ctx):
@@ -144,5 +139,16 @@ class Familiada(commands.Cog):
         self.participants.clear()
         self.teams.clear()
         self.used_colors.clear()
+
+    async def print_question(self, ctx, question: int):
+        question = self.questions[question]
+        ret = f"```\n{question.content}\n"
+        for index, answer in enumerate(question.answers, start = 0):
+            if answer in self.current_answers:
+                ret += f"{index + 1}. {question.answers[index]}: {question.points[index]} \n"
+            else:
+                ret += f"{index + 1}. ---------- {res.Hints[self.current_question][index]} \n"
+        ret += "```"
+        await ctx.send(ret)
 
 

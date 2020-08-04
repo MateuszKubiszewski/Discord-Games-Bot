@@ -1,23 +1,29 @@
 import discord
 import random
+import json
 from discord.ext import commands
 
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.punktyTGS = {}
+        with open('punkty.txt', 'r') as file:
+            self.punktyTGS = json.loads(file.read())
    
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def dodaj_punkt(self, ctx, new_members: commands.Greedy[discord.Member]):
         for member in new_members:
-            if member not in self.punktyTGS:
-                self.punktyTGS[member] = 1
+            toadd = str(member)
+            if toadd not in self.punktyTGS:
+                self.punktyTGS[toadd] = 1
             else:
-                self.punktyTGS[member] += 1
+                self.punktyTGS[toadd] += 1
         logs = ""
         for k, v in self.punktyTGS.items():
-            logs += f"{k.display_name}: {v}    "
+            logs += f"{k}: {v}    "
+        with open('punkty.txt', 'w') as file:
+            file.write(json.dumps(self.punktyTGS))
         print(logs)
     
     @commands.command()
@@ -25,6 +31,6 @@ class Utility(commands.Cog):
         sorted_members = sorted(self.punktyTGS.items(), key=lambda x: x[1], reverse=True)
         toSend = "```\nRanking:\n"
         for index, member in enumerate(sorted_members, start=0):
-            toSend += f"{index + 1}. {member[0].display_name}: {member[1]}\n"
+            toSend += f"{index + 1}. {member[0]}: {member[1]}\n"
         toSend += "```"
         await ctx.send(toSend)
