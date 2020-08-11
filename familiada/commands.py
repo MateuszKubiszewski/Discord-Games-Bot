@@ -21,6 +21,7 @@ class Familiada(commands.Cog):
             self.asked_questions = json.load(file)
         self.used_colors = []
         self.current_question = -1
+        print(self.asked_questions)
 
     @commands.command()
     @commands.has_permissions(administrator=True)
