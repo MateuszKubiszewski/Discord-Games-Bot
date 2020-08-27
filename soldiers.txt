@@ -1,0 +1,18 @@
+{
+    "json://210465488294248459": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 6739970,
+        "disc": "Donald#7905",
+        "name": "Donald",
+        "hits": 0,
+        "xp_start": 0
+    },
+    "json://314644011371462657": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 9169282,
+        "disc": "Uzury#0986",
+        "name": "Uzury",
+        "hits": 0,
+        "xp_start": 0
+    }
+}

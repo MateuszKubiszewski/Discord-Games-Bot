@@ -50,3 +50,11 @@ class Utility(commands.Cog):
             toSend += f"{index + 1}. {member[0]}: {member[1]}\n"
         toSend += "```"
         await ctx.send(toSend)
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def test(self, ctx):
+        message = await self.bot.wait_for('message')
+        # await ctx.send("@everyone")
+        print(message)
+        print(message.content)

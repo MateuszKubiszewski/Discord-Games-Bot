@@ -10,6 +10,10 @@ Od_Maxia/
 resources/
 familiada_skriny.png
 hangman/
+test.py
+test.txt
+help_dowodca.png
+help_zolnierz.png
 
 # C extensions
 *.so
