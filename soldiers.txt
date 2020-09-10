@@ -14,5 +14,37 @@
         "name": "Uzury",
         "hits": 0,
         "xp_start": 0
+    },
+    "json://371395139962142724": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 6237223,
+        "disc": "MarioNx#6315",
+        "name": "MarioNx",
+        "hits": 240,
+        "xp_start": 0
+    },
+        "json://391326426772799488": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 2435790,
+        "disc": "Gacie#1841",
+        "name": "Gacie",
+        "hits": 8,
+        "xp_start": 0
+    },
+        "json://392293513724690444": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 4030578,
+        "disc": "Vogel#9140",
+        "name": "Vogel",
+        "hits": 103,
+        "xp_start": 0
+    },
+        "json://307484469659435008": {
+        "py/object": "zbiorki.commands.Soldier",
+        "erep_id": 4170353,
+        "disc": "Levstangor#9007",
+        "name": "Levstangor",
+        "hits": 0,
+        "xp_start": 0
     }
 }

@@ -37,6 +37,8 @@ class Zbiorki(commands.Cog):
     async def otworz_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("```\nPrawidłowy sposób użycia:\n@otworz link\nlink - link do bitwy w eRepie [albo jakis komentarz zamiast linku]```")
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
 
     @commands.command()
     async def zarejestruj(self, ctx, id: int):
@@ -130,6 +132,11 @@ class Zbiorki(commands.Cog):
         self.logsoldiers()
         await ctx.send("Dziękujemy za udział w zbiórce!")
     
+    @zamknij.error
+    async def zamknij_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
+    
     @commands.command()
     @commands.has_role("Dowództwo")
     async def rozlicz(self, ctx):
@@ -137,6 +144,12 @@ class Zbiorki(commands.Cog):
         for item in list(self.soldiers.values()):
             item.hits = 0
         await ctx.send("Done.")
+        self.logsoldiers()
+    
+    @rozlicz.error
+    async def rozlicz_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
 
     @commands.command()
     @commands.has_role("Dowództwo")
@@ -147,6 +160,11 @@ class Zbiorki(commands.Cog):
             toSend += f"{v.name}: {v.hits} - https://www.erepublik.com/en/citizen/profile/{v.erep_id}\n"
         toSend += "```"
         await ctx.send(toSend)
+    
+    @statystyki.error
+    async def statystyki_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
 
     @commands.command()
     @commands.has_role("Dowództwo")
@@ -158,6 +176,11 @@ class Zbiorki(commands.Cog):
         @edit @Donald -10 - zabiera 10 hitów."""
         self.soldiers[soldier.id].hits += n
         await ctx.send("Done.")
+    
+    @edit.error
+    async def edit_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
     
     @commands.command()
     async def help_zolnierz(self, ctx):
@@ -171,6 +194,11 @@ class Zbiorki(commands.Cog):
         """Prawidłowy sposób użycia: @help_dowodca
         Wysyła link do miniporadnika wyjaśniającego komendy dla Dowództwa."""
         await ctx.send("https://i.imgur.com/rhccXFt.png")
+    
+    @help_dowodca.error
+    async def help_dowodca_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.")
 
     def logsoldiers(self):
         print(jsonpickle.encode(self.soldiers, keys=True, indent=4))
