@@ -20,7 +20,7 @@
         "erep_id": 6237223,
         "disc": "MarioNx#6315",
         "name": "MarioNx",
-        "hits": 240,
+        "hits": 0,
         "xp_start": 0
     },
         "json://391326426772799488": {
@@ -28,7 +28,7 @@
         "erep_id": 2435790,
         "disc": "Gacie#1841",
         "name": "Gacie",
-        "hits": 8,
+        "hits": 0,
         "xp_start": 0
     },
         "json://392293513724690444": {
@@ -36,7 +36,7 @@
         "erep_id": 4030578,
         "disc": "Vogel#9140",
         "name": "Vogel",
-        "hits": 103,
+        "hits": 0,
         "xp_start": 0
     },
         "json://307484469659435008": {
