@@ -37,6 +37,9 @@ class Familiada(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def zbierz_druzyne(self, ctx, members: commands.Greedy[discord.Member]):
+        if len(self.used_colors) == len(res.Colors):
+            await ctx.send("Niestety skończyło mi się miejsce na nowe drużyny :c.")
+            return
         number = random.randint(0, len(res.Colors) - 1)
         while number in self.used_colors:
             number = random.randint(0, len(res.Questions) - 1)

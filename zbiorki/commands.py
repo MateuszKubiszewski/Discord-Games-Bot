@@ -25,13 +25,14 @@ class Zbiorki(commands.Cog):
 
     @commands.command()
     @commands.has_role("Dowództwo")
-    async def otworz(self, ctx, battle_link: str):
-        """Prawidłowy sposób użycia: @otworz link\nlink - link do bitwy w eRepie [albo jakis komentarz zamiast linku].
+    async def otworz(self, ctx, battle_link="A wtedy Jezus rzekł: Idźcie i nabijajcie expa.": str):
+        """Prawidłowy sposób użycia: @otworz link\nlink - link do bitwy w eRepie [albo jakis komentarz zamiast linku] [opcjonalny argument].
         Pozwala żołnierzom używać komend join i finish.
-        Jeśli użyjemy cudzysłowów, możemy do bitwy dodać jakiś komentarz, np. "link all div all in"."""
+        Jeśli użyjemy cudzysłowów, możemy do bitwy dodać jakiś komentarz, np. "link all div all in".
+        Możemy też w cudzysłowiu dodać sam komentarz."""
         self.opened = True
         self.battle = battle_link
-        await ctx.send("@everyone dołączamy i bijemy wedle wytycznych: " + battle_link)            
+        await ctx.send("@everyone dołączamy i bijemy wedle wytycznych: " + battle_link)
     
     @otworz.error
     async def otworz_error(self, ctx, error):
