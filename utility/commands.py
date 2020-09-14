@@ -24,7 +24,7 @@ class Utility(commands.Cog):
             logs += f"{k}: {v}    "
         # with open('punkty.txt', 'w') as file:
         #     file.write(json.dumps(self.punktyTGS))
-        print(logs)
+        self.logsoldiers()
     
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -40,7 +40,7 @@ class Utility(commands.Cog):
             logs += f"{k}: {v}    "
         # with open('punkty.txt', 'w') as file:
         #     file.write(json.dumps(self.punktyTGS))
-        print(logs)
+        self.logsoldiers()
     
     @commands.command()
     async def ranking_graczy(self, ctx):
@@ -58,3 +58,6 @@ class Utility(commands.Cog):
         # await ctx.send("@everyone")
         print(message)
         print(message.content)
+    
+    def logsoldiers(self):
+        print(json.dumps(self.punktyTGS))
