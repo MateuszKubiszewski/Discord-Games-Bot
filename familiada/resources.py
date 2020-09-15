@@ -35,9 +35,9 @@ Answers = [
     ['sypialny', 'pocztowy', 'restauracyjny', 'do przewozu rowerów'],
     ['kot', 'mysz', 'tygrys', 'lew'],
     ['zasłony', 'firanki', 'lampa', 'obraz'],
-    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks']
-    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke']
-    ['kawe', 'herbate', 'mleko', 'kakao', 'sok']
+    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks'],
+    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke'],
+    ['kawe', 'herbate', 'mleko', 'kakao', 'sok'],
     ['Niemcy', 'Francja', 'Wielka Brytania', 'Hiszpania', 'Szwecja'],
     ['paproc', 'storczyk', 'fikus', 'dracena', 'bluszcz'],
     ['do rekina', 'do leszcza', 'do piranii', 'do plotki', 'do piskorza'],

@@ -6,6 +6,9 @@ from discord.ext import commands
 
 import urllib
 
+from ..S3 import write
+from ..S3 import read
+
 class Soldier:
     def __init__(self, erep_id: int, disc: str, name: str):
         self.erep_id = erep_id
@@ -20,8 +23,7 @@ class Zbiorki(commands.Cog):
         self.opened = False
         self.battle = ""
         self.soldiers = {}
-        with open("soldiers.txt", "r") as f:
-            self.soldiers = jsonpickle.decode(f.read(), keys=True)
+        self.soldiers = jsonpickle.decode(read('soldiers.txt').Body, keys=True)
 
     @commands.command()
     @commands.has_role("Dowództwo")
@@ -204,6 +206,13 @@ class Zbiorki(commands.Cog):
     async def help_dowodca_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRole):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+    
+    @commands.command()
+    @commands.has_role("Dowództwo")
+    async def zapisz(self, ctx):
+        """Prawidłowy sposób użycia: @zapisz
+        Zapisuje obecnych w bazie żołnierzy na trwałym pliku."""
+        write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
 
     def logsoldiers(self):
         print(jsonpickle.encode(self.soldiers, keys=True, indent=4))

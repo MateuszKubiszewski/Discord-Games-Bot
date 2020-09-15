@@ -7,8 +7,8 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.punktyTGS = {}
-        with open('punkty.txt', 'r') as file:
-            self.punktyTGS = json.loads(file.read())
+        # with open('punkty.txt', 'r') as file:
+        #     self.punktyTGS = json.loads(file.read())
    
     @commands.command()
     @commands.has_permissions(administrator=True)
