@@ -1,6 +1,7 @@
 import discord
 import random
 import json
+import jsonpickle
 from discord.ext import commands
 
 from amazons3 import S3
