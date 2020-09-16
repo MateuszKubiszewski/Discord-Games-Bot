@@ -15,7 +15,7 @@ from zbiorki import commands as z_comms
 # TOKEN = os.getenv('DISCORD_TOKEN')
 
 # heroku run
-TOKEN = os.environ["ACCESS_TOKEN"]
+TOKEN = os.environ["DISCORD_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))

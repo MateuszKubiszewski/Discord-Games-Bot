@@ -9,6 +9,8 @@ class Utility(commands.Cog):
         self.punktyTGS = {}
         # with open('punkty.txt', 'r') as file:
         #     self.punktyTGS = json.loads(file.read())
+        response = S3.read('punkty.txt')
+        self.punktyTGS = jsonpickle.decode(response['Body'].read().decode('utf-8'), keys=True)
    
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -60,4 +62,5 @@ class Utility(commands.Cog):
         print(message.content)
     
     def logsoldiers(self):
+        S3.write('punkty.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
         print(json.dumps(self.punktyTGS))

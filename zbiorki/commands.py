@@ -6,8 +6,7 @@ from discord.ext import commands
 
 import urllib
 
-from ..S3 import write
-from ..S3 import read
+from amazons3 import S3
 
 class Soldier:
     def __init__(self, erep_id: int, disc: str, name: str):
@@ -23,7 +22,8 @@ class Zbiorki(commands.Cog):
         self.opened = False
         self.battle = ""
         self.soldiers = {}
-        self.soldiers = jsonpickle.decode(read('soldiers.txt').Body, keys=True)
+        response = S3.read('soldiers.txt')
+        self.soldiers = jsonpickle.decode(response['Body'].read().decode('utf-8'), keys=True)
 
     @commands.command()
     @commands.has_role("Dowództwo")
@@ -212,7 +212,8 @@ class Zbiorki(commands.Cog):
     async def zapisz(self, ctx):
         """Prawidłowy sposób użycia: @zapisz
         Zapisuje obecnych w bazie żołnierzy na trwałym pliku."""
-        write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
+        S3.write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
 
     def logsoldiers(self):
+        S3.write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
         print(jsonpickle.encode(self.soldiers, keys=True, indent=4))
