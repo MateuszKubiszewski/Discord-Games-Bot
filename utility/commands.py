@@ -64,5 +64,5 @@ class Utility(commands.Cog):
         print(message.content)
     
     def logsoldiers(self):
-        S3.write('punkty.txt', json.dumps(self.soldiers)
+        S3.write('punkty.txt', json.dumps(self.soldiers))
         print(json.dumps(self.punktyTGS))
