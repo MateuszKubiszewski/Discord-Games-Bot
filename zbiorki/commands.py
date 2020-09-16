@@ -1,5 +1,6 @@
 import discord
 import random
+import json
 import jsonpickle
 import re
 from discord.ext import commands
@@ -19,11 +20,11 @@ class Soldier:
 class Zbiorki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.opened = False
         self.battle = ""
-        self.soldiers = {}
         response = S3.read('soldiers.txt')
         self.soldiers = jsonpickle.decode(response['Body'].read().decode('utf-8'), keys=True)
+        response2 = S3.read('prawda.txt')
+        self.opened = json.loads(response2['Body'].read().decode('utf-8'))
 
     @commands.command()
     @commands.has_role("Dowództwo")
@@ -32,9 +33,13 @@ class Zbiorki(commands.Cog):
         Pozwala żołnierzom używać komend join i finish.
         Jeśli użyjemy cudzysłowów, możemy do bitwy dodać jakiś komentarz, np. "link all div all in".
         Możemy też w cudzysłowiu dodać sam komentarz."""
+        if self.opened:
+            await ctx.send("Zbjumrka jest już otworzona!")
+            return
         self.opened = True
         self.battle = battle_link
         await ctx.send("@everyone dołączamy i bijemy wedle wytycznych: " + battle_link)
+        S3.write('prawda.txt', json.dumps(self.opened))
     
     @otworz.error
     async def otworz_error(self, ctx, error):
@@ -137,6 +142,7 @@ class Zbiorki(commands.Cog):
             item.xp_start = 0
         await ctx.send("Dziękujemy za udział w zbiórce!")
         self.logsoldiers()
+        S3.write('prawda.txt', json.dumps(self.opened))
     
     @zamknij.error
     async def zamknij_error(self, ctx, error):

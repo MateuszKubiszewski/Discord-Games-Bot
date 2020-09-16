@@ -1,7 +1,6 @@
 import discord
 import random
 import json
-import jsonpickle
 from discord.ext import commands
 
 from amazons3 import S3
@@ -13,7 +12,7 @@ class Utility(commands.Cog):
         # with open('punkty.txt', 'r') as file:
         #     self.punktyTGS = json.loads(file.read())
         response = S3.read('punkty.txt')
-        self.punktyTGS = jsonpickle.decode(response['Body'].read().decode('utf-8'), keys=True)
+        self.punktyTGS = json.loads(response['Body'].read().decode('utf-8'))
    
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -65,5 +64,5 @@ class Utility(commands.Cog):
         print(message.content)
     
     def logsoldiers(self):
-        S3.write('punkty.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
+        S3.write('punkty.txt', json.dumps(self.soldiers)
         print(json.dumps(self.punktyTGS))

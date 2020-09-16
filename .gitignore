@@ -17,6 +17,7 @@ help_zolnierz.png
 soldiers.txt
 punkty.txt
 zapasowy.py
+prawda.txt
 
 # C extensions
 *.so
