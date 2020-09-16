@@ -3,6 +3,8 @@ import random
 import json
 from discord.ext import commands
 
+from amazons3 import S3
+
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
