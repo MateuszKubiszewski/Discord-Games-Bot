@@ -178,6 +178,7 @@ class Zbiorki(commands.Cog):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
     
     @commands.command()
+    @commands.has_role("Dowództwo")
     async def statystyki_excel(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz hity przyjaźnie dla excela."""
         toSend = "```\nName;Hits\n"
@@ -187,12 +188,12 @@ class Zbiorki(commands.Cog):
         await ctx.send(toSend)
     
     @statystyki_excel.error
-    @commands.has_role("Dowództwo")
     async def statystyki_excel_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRole):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
     
     @commands.command()
+    @commands.has_role("Dowództwo")
     async def statystyki_linki(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
@@ -202,7 +203,6 @@ class Zbiorki(commands.Cog):
         await ctx.send(toSend)
     
     @statystyki_linki.error
-    @commands.has_role("Dowództwo")
     async def statystyki_linki_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRole):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
