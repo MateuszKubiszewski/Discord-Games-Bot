@@ -165,6 +165,35 @@ class Zbiorki(commands.Cog):
 
     @commands.command()
     async def statystyki(self, ctx):
+        """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz ich zebrane hitki."""
+        toSend = "```\nName: Hits\n"
+        for k, v in self.soldiers.items():
+            toSend += f"{v.name}: {v.hits}\n"
+        toSend += "```"
+        await ctx.send(toSend)
+    
+    @statystyki.error
+    async def statystyki_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+    
+    @commands.command()
+    async def statystyki_excel(self, ctx):
+        """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz hity przyjaźnie dla excela."""
+        toSend = "```\nName;Hits\n"
+        for k, v in self.soldiers.items():
+            toSend += f"{v.name};{v.hits}\n"
+        toSend += "```"
+        await ctx.send(toSend)
+    
+    @statystyki_excel.error
+    @commands.has_role("Dowództwo")
+    async def statystyki_excel_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+    
+    @commands.command()
+    async def statystyki_linki(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
         for k, v in self.soldiers.items():
@@ -172,8 +201,9 @@ class Zbiorki(commands.Cog):
         toSend += "```"
         await ctx.send(toSend)
     
-    @statystyki.error
-    async def statystyki_error(self, ctx, error):
+    @statystyki_linki.error
+    @commands.has_role("Dowództwo")
+    async def statystyki_linki_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRole):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
