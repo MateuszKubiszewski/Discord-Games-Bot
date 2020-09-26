@@ -68,7 +68,8 @@ class Utility(commands.Cog):
         match = re.search("(<div class=\\\"joke\\\">)\n.+\n.+", data)
         string = match.group(0)[21:-9]
         striing = string.replace("<br />", "\n")
-        joke = "```" + striing + "```"
+        striiing = striing.replace("&quot;", "\"")
+        joke = "```" + striiing + "```"
         await ctx.send(joke)
     
     def logsoldiers(self):
