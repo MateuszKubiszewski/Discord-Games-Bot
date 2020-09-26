@@ -3,14 +3,15 @@ import random
 import json
 from discord.ext import commands
 
+import urllib.request
+import re
+
 from amazons3 import S3
 
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.punktyTGS = {}
-        # with open('punkty.txt', 'r') as file:
-        #     self.punktyTGS = json.loads(file.read())
         response = S3.read('punkty.txt')
         self.punktyTGS = json.loads(response['Body'].read().decode('utf-8'))
    
@@ -26,8 +27,6 @@ class Utility(commands.Cog):
         logs = ""
         for k, v in self.punktyTGS.items():
             logs += f"{k}: {v}    "
-        # with open('punkty.txt', 'w') as file:
-        #     file.write(json.dumps(self.punktyTGS))
         self.logsoldiers()
     
     @commands.command()
@@ -42,8 +41,6 @@ class Utility(commands.Cog):
         logs = ""
         for k, v in self.punktyTGS.items():
             logs += f"{k}: {v}    "
-        # with open('punkty.txt', 'w') as file:
-        #     file.write(json.dumps(self.punktyTGS))
         self.logsoldiers()
     
     @commands.command()
@@ -59,9 +56,20 @@ class Utility(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def test(self, ctx):
         message = await self.bot.wait_for('message')
-        # await ctx.send("@everyone")
         print(message)
         print(message.content)
+    
+    @commands.command()
+    async def suchar(self, ctx):
+        link = "http://www.kinyen.pl/dowcipy/losowy/"
+        page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
+        content = urllib.request.urlopen(page).read()
+        data = content.decode('UTF-8')
+        match = re.search("(<div class=\\\"joke\\\">)\n.+\n.+", data)
+        string = match.group(0)[21:-9]
+        striing = string.replace("<br />", "\n")
+        joke = "```" + striing + "```"
+        await ctx.send(joke)
     
     def logsoldiers(self):
         S3.write('punkty.txt', json.dumps(self.soldiers))
