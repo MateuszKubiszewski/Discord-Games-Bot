@@ -164,7 +164,6 @@ class Zbiorki(commands.Cog):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
-    @commands.has_role("Dowództwo")
     async def statystyki(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
