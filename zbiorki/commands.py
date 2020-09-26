@@ -16,6 +16,8 @@ class Soldier:
         self.name = name
         self.hits = 0
         self.xp_start = 0
+    def __lt__(self, other):
+        return self.hits < other.hits
 
 class Zbiorki(commands.Cog):
     def __init__(self, bot):
@@ -166,9 +168,9 @@ class Zbiorki(commands.Cog):
     @commands.command()
     async def statystyki(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz ich zebrane hitki."""
-        toSend = "```\nName: Hits\n"
-        for k, v in self.soldiers.items():
-            toSend += f"{v.name}: {v.hits}\n"
+        toSend = "```\nRank. Name: Hits\n"
+        for index, tup in enumerate(self.sortsoldiers()):
+            toSend += f"{index + 1}. {tup[1].name}: {tup[1].hits}\n"
         toSend += "```"
         await ctx.send(toSend)
     
@@ -182,8 +184,8 @@ class Zbiorki(commands.Cog):
     async def statystyki_excel(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz hity przyjaźnie dla excela."""
         toSend = "```\nName;Hits\n"
-        for k, v in self.soldiers.items():
-            toSend += f"{v.name};{v.hits}\n"
+        for tup in self.sortsoldiers():
+            toSend += f"{tup[1].name};{tup[1].hits}\n"
         toSend += "```"
         await ctx.send(toSend)
     
@@ -197,8 +199,8 @@ class Zbiorki(commands.Cog):
     async def statystyki_linki(self, ctx):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
-        for k, v in self.soldiers.items():
-            toSend += f"{v.name}: {v.hits} - https://www.erepublik.com/en/citizen/profile/{v.erep_id}\n"
+        for tup in self.sortsoldiers():
+            toSend += f"{tup[1].name}: {tup[1].hits} - https://www.erepublik.com/en/citizen/profile/{v.erep_id}\n"
         toSend += "```"
         await ctx.send(toSend)
     
@@ -252,3 +254,6 @@ class Zbiorki(commands.Cog):
     def logsoldiers(self):
         S3.write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
         print(jsonpickle.encode(self.soldiers, keys=True, indent=4))
+
+    def sortsoldiers(self):
+        return sorted(self.soldiers.items(), key=lambda x: x[1], reverse=True)
