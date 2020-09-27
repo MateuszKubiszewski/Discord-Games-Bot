@@ -77,16 +77,17 @@ class Utility(commands.Cog):
     
     @commands.command()
     async def ciekawostka(self, ctx):
-        drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1))
+        await ctx.send(self.drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1)))
     
     @commands.Cog.listener()
     async def on_ready(self):
-        drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1))
+        channel = self.bot.get_channel(515983210455236646)
+        await channel.send(self.drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1)))
     
     def logsoldiers(self):
         S3.write('punkty.txt', json.dumps(self.soldiers))
         print(json.dumps(self.punktyTGS))
 
-    async def drukuj_ciekawostke(self, number):
-        await ctx.send("```\n" + res.Ciekawostki[number] + "```")
+    def drukuj_ciekawostke(self, number):
+        return "```\n" + res.Ciekawostki[number] + "```"
 
