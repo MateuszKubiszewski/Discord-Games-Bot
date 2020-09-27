@@ -200,7 +200,7 @@ class Zbiorki(commands.Cog):
         """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
         for tup in self.sortsoldiers():
-            toSend += f"{tup[1].name}: {tup[1].hits} - https://www.erepublik.com/en/citizen/profile/{v.erep_id}\n"
+            toSend += f"{tup[1].name}: {tup[1].hits} - https://www.erepublik.com/en/citizen/profile/{tup[1].erep_id}\n"
         toSend += "```"
         await ctx.send(toSend)
     
