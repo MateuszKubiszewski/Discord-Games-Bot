@@ -8,12 +8,15 @@ import re
 
 from amazons3 import S3
 
+from . import resources as res 
+
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.punktyTGS = {}
         response = S3.read('punkty.txt')
         self.punktyTGS = json.loads(response['Body'].read().decode('utf-8'))
+        random.seed()
    
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -69,9 +72,21 @@ class Utility(commands.Cog):
         string = match.group(0)[21:-9]
         striing = string.replace("<br />", "\n")
         striiing = striing.replace("&quot;", "\"")
-        joke = "```" + striiing + "```"
+        joke = "```\n" + striiing + "```"
         await ctx.send(joke)
+    
+    @commands.command()
+    async def ciekawostka(self, ctx):
+        drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1))
+    
+    @commands.Cog.listener()
+    async def on_ready(self):
+        drukuj_ciekawostke(random.randint(0, len(res.Ciekawostki) - 1))
     
     def logsoldiers(self):
         S3.write('punkty.txt', json.dumps(self.soldiers))
         print(json.dumps(self.punktyTGS))
+
+    async def drukuj_ciekawostke(self, number):
+        await ctx.send("```\n" + res.Ciekawostki[number] + "```")
+
