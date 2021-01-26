@@ -14,6 +14,7 @@ Questions = [
     "Jaki rok nie zaczyna się od pierwszego stycznia?",
     "Jaki specjalny wagon może znajdować się w składzie pociągu?",
     "Wąsate zwierze",
+    "Czym może być pokryty dach?",
     "Wymień elementy dekoracji wnętrz.",
     "Jakie ciasto kojarzy się z wizytą u babci?",
     "Co ludzie często gubią?",
@@ -27,17 +28,18 @@ Questions = [
     "Imię męskie zawierające cząstkę sław.",
     "Co jest dostarczane do mieszkań za pomocą kabli?",
     "Najbardziej znane polskie jezioro.",
-    "Dodaj litery do słowa -matka- tak, by utworzyć nowy wyraz."
+    "Dodaj litery do słowa -matka- tak, by utworzyć nowy wyraz.",
 ]
 
 Answers = [
     ['szkolny', 'akademicki', 'liturgiczny', 'zydowski'],
     ['sypialny', 'pocztowy', 'restauracyjny', 'do przewozu rowerów'],
     ['kot', 'mysz', 'tygrys', 'lew'],
+    ['dachówka', 'blacha', 'papa', 'eternit'],
     ['zasłony', 'firanki', 'lampa', 'obraz'],
-    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks'],
-    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke'],
-    ['kawe', 'herbate', 'mleko', 'kakao', 'sok'],
+    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks']
+    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke']
+    ['kawe', 'herbate', 'mleko', 'kakao', 'sok']
     ['Niemcy', 'Francja', 'Wielka Brytania', 'Hiszpania', 'Szwecja'],
     ['paproc', 'storczyk', 'fikus', 'dracena', 'bluszcz'],
     ['do rekina', 'do leszcza', 'do piranii', 'do plotki', 'do piskorza'],
@@ -47,10 +49,11 @@ Answers = [
     ['Stanisław', 'Bolesław', 'Bronisław'],
     ['prad', 'internet', 'telewizja'],
     ['Sniardwy', 'Mamry', 'Wigry'],
-    ['dyplomatka', 'armatka', 'szmatka']
+    ['dyplomatka', 'armatka', 'szmatka'],
 ]
 
 Points = [
+    [30, 20, 10, 5],
     [30, 20, 10, 5],
     [30, 20, 10, 5],
     [30, 20, 10, 5],
@@ -67,13 +70,14 @@ Points = [
     [58, 26, 16],
     [58, 26, 16],
     [58, 26, 16],
-    [58, 26, 16]
+    [58, 26, 16],
 ]
 
 Hints = [
     ['2 + 2 = 4', 'Alma Mater', 'Publiczna forma kultu religijnego', 'Szalom!'],
     ['chrapu chrap', 'lecą listy lecą', 'om nom nom nom', 'tam przechowasz swoje dwa kółka'],
     ['duże i małe, dzikie i w domu', 'a kysz', 'strzeż się Mowgli', 'dzierży koronę'],
+    ['małe kawałki', 'nagrzewa się szybko', 'do widzenia, narazie', 'trzeba wymienić bo azbest'],
     ['nie widać co się dzieje', 'białe i delikatne', 'jasno wszędzie', 'namalowane, można oglądać'],
     ['zaczyna się od mleka', 'najpierw są jabłka', 'z korzenną przyprawą', 'trzeba dużo mieszać', 'czerwone kwiaty', 'mnóstwo kolorowych bakalii'],
     ['otwieramy', 'szczęścia nie dają', 'papiery, papiery', 'schronienie przed kapuśniakiem', 'kiedy zimno jest na głowie'],
@@ -87,5 +91,5 @@ Hints = [
     ['Moniuszko', 'Chrobry', 'Geremek'],
     ['napędza urządzenia', 'łączymy się nim z eRepublik', 'oglądamy'],
     ['największe', 'drugie pod względem powierzchni jezioro w Polsce', 'jak rower składak'],
-    ['kobieta dyplomata', 'mała armata', 'do wycierania']
+    ['kobieta dyplomata', 'mała armata', 'do wycierania'],
 ]

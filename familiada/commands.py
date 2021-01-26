@@ -17,8 +17,8 @@ class Familiada(commands.Cog):
             self.questions.append(toAppend)
         self.asked_questions = [] # cos z tym trzeba zrobic
         # moze tablica z asked questions dla kazdego serwera, event handler na dolaczenie do serweru ktory dodaje serwer do listy?
-        with open('asked-questions.txt', 'r') as file:
-            self.asked_questions = json.load(file)
+        # with open('asked-questions.txt', 'r') as file:
+        #     self.asked_questions = json.load(file)
         self.used_colors = []
         self.current_question = -1
         print(self.asked_questions)
@@ -33,6 +33,11 @@ class Familiada(commands.Cog):
         for team in self.teams:
             tosend += f"{team}"
         await ctx.send(tosend)
+
+    @familiada.error
+    async def familiada_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -51,6 +56,14 @@ class Familiada(commands.Cog):
         self.teams.append(toappend)
         self.used_colors.append(number)
         await ctx.send(toappend)
+
+    @zbierz_druzyne.error
+    async def zbierz_druzyne_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
+                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
     async def druzyny(self, ctx):
@@ -110,6 +123,11 @@ class Familiada(commands.Cog):
         await self.print_question(ctx, self.current_question)
         self.current_question = -1
 
+    @pytanie.error
+    async def pytanie_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def podsumowanie(self, ctx):
@@ -128,6 +146,11 @@ class Familiada(commands.Cog):
         print(self.asked_questions)
         # with open('asked-questions.txt', 'w') as file:
         #     json.dump(self.asked_questions, file)
+    
+    @podsumowanie.error
+    async def podsumowanie_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
     async def punkty(self, ctx):

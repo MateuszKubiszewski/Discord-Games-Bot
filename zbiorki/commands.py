@@ -56,8 +56,8 @@ class Zbiorki(commands.Cog):
         Zapisuje użykownika wywołującego komendę do bazy żołnierzy."""
         author = ctx.message.author
         if author.id in self.soldiers:
-            await ctx.send("Jesteś już zarejestrowany! Jeśli podałeś błędne ID i chcesz je zmienić, musisz się najpierw wyrejestrować \
-                a następnie zarejestrować z nowym ID.")
+            await ctx.send("```Jesteś już zarejestrowany! Jeśli podałeś błędne ID i chcesz je zmienić, musisz się najpierw wyrejestrować \
+                a następnie zarejestrować z nowym ID.```")
         else:
             toAdd = Soldier(id, str(author), author.name)
             self.soldiers[author.id] = toAdd
@@ -182,7 +182,7 @@ class Zbiorki(commands.Cog):
     @commands.command()
     @commands.has_role("Dowództwo")
     async def statystyki_excel(self, ctx):
-        """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie oraz hity przyjaźnie dla excela."""
+        """Prawidłowy sposób użycia: @statystyki_excel\nWyświetla żołnierzy w bazie oraz hity przyjaźnie dla excela."""
         toSend = "```\nName;Hits\n"
         for tup in self.sortsoldiers():
             toSend += f"{tup[1].name};{tup[1].hits}\n"
@@ -197,7 +197,7 @@ class Zbiorki(commands.Cog):
     @commands.command()
     @commands.has_role("Dowództwo")
     async def statystyki_linki(self, ctx):
-        """Prawidłowy sposób użycia: @statystyki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
+        """Prawidłowy sposób użycia: @statystyki_linki\nWyświetla żołnierzy w bazie, ich zebrane hity i linki do profilów."""
         toSend = "```\nName: Hits - Link\n"
         for tup in self.sortsoldiers():
             toSend += f"{tup[1].name}: {tup[1].hits} - https://www.erepublik.com/en/citizen/profile/{tup[1].erep_id}\n"
