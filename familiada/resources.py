@@ -37,9 +37,9 @@ Answers = [
     ['kot', 'mysz', 'tygrys', 'lew'],
     ['dachówka', 'blacha', 'papa', 'eternit'],
     ['zasłony', 'firanki', 'lampa', 'obraz'],
-    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks']
-    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke']
-    ['kawe', 'herbate', 'mleko', 'kakao', 'sok']
+    ['sernik', 'szarlotka', 'piernik', 'ciasto drożdżowe', 'makowiec', 'keks'],
+    ['klucze', 'pieniadze', 'dokumenty', 'parasol', 'czapke'],
+    ['kawe', 'herbate', 'mleko', 'kakao', 'sok'],
     ['Niemcy', 'Francja', 'Wielka Brytania', 'Hiszpania', 'Szwecja'],
     ['paproc', 'storczyk', 'fikus', 'dracena', 'bluszcz'],
     ['do rekina', 'do leszcza', 'do piranii', 'do plotki', 'do piskorza'],
