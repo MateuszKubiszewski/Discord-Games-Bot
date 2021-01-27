@@ -138,13 +138,16 @@ class Zbiorki(commands.Cog):
     async def zamknij(self, ctx):
         """Prawidłowy sposób użycia: @zamknij\nZabiera możliwość używania komend @join i @finish.
         Zeruje zapisany poziom XP żołnierzy [hity zostają w bazie]. Jeśli ktoś zapomniał użyć @finish to ucina zrobione na zbiórce hitki :(."""
-        self.opened = False
-        self.battle = ""
-        for item in list(self.soldiers.values()):
-            item.xp_start = 0
-        await ctx.send("Dziękujemy za udział w zbiórce!")
-        self.logsoldiers()
-        S3.write('prawda.txt', json.dumps(self.opened))
+        if self.opened:
+            self.opened = False
+            self.battle = ""
+            for item in list(self.soldiers.values()):
+                item.xp_start = 0
+            await ctx.send("```\nDziękujemy za udział w zbiórce!```")
+            self.logsoldiers()
+            S3.write('prawda.txt', json.dumps(self.opened))
+        else:
+            await ctx.send("```\nBrak otwartych zbiórek, proszę mnie nie molestować.```")
     
     @zamknij.error
     async def zamknij_error(self, ctx, error):

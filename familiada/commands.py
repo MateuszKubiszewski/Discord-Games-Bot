@@ -36,7 +36,7 @@ class Familiada(commands.Cog):
 
     @familiada.error
     async def familiada_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRole):
+        if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
@@ -62,7 +62,7 @@ class Familiada(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
                 \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
-        if isinstance(error, commands.errors.MissingRole):
+        if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
@@ -125,7 +125,7 @@ class Familiada(commands.Cog):
 
     @pytanie.error
     async def pytanie_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRole):
+        if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
@@ -149,7 +149,7 @@ class Familiada(commands.Cog):
     
     @podsumowanie.error
     async def podsumowanie_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRole):
+        if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
