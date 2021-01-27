@@ -45,10 +45,11 @@ class Zbiorki(commands.Cog):
     
     @otworz.error
     async def otworz_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("```\nPrawidłowy sposób użycia:\n@otworz link\nlink - link do bitwy w eRepie [albo jakis komentarz zamiast linku]```")
         if isinstance(error, commands.errors.MissingRole):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.send("```\nPrawidłowy sposób użycia:\n@otworz link\nlink - link do bitwy w eRepie [albo jakis komentarz zamiast linku]```")
+        
 
     @commands.command()
     async def zarejestruj(self, ctx, id: int):

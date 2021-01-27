@@ -59,11 +59,11 @@ class Familiada(commands.Cog):
 
     @zbierz_druzyne.error
     async def zbierz_druzyne_error(self, ctx, error):
-        if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
-                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
         if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
+                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
 
     @commands.command()
     async def druzyny(self, ctx):
