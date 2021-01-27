@@ -42,28 +42,30 @@ class Familiada(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def zbierz_druzyne(self, ctx, members: commands.Greedy[discord.Member]):
-        if len(self.used_colors) == len(res.Colors):
-            await ctx.send("Niestety skończyło mi się miejsce na nowe drużyny :c.")
-            return
-        number = random.randint(0, len(res.Colors) - 1)
-        while number in self.used_colors:
-            number = random.randint(0, len(res.Questions) - 1)
-        membs = {}
-        for member in members:
-            self.participants.append(member)
-            membs[member] = 0
-        toappend = cl.Team(res.Colors[number], membs)
-        self.teams.append(toappend)
-        self.used_colors.append(number)
-        await ctx.send(toappend)
+        if len(members) == 0:
+            await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
+                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
+        else:
+            if len(self.used_colors) == len(res.Colors):
+                await ctx.send("Niestety skończyło mi się miejsce na nowe drużyny :c.")
+                return
+            number = random.randint(0, len(res.Colors) - 1)
+            while number in self.used_colors:
+                number = random.randint(0, len(res.Questions) - 1)
+            membs = {}
+            for member in members:
+                self.participants.append(member)
+                membs[member] = 0
+                print(member)
+            toappend = cl.Team(res.Colors[number], membs)
+            self.teams.append(toappend)
+            self.used_colors.append(number)
+            await ctx.send(toappend)
 
     @zbierz_druzyne.error
     async def zbierz_druzyne_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingPermissions):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
-        elif isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
-                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
 
     @commands.command()
     async def druzyny(self, ctx):
