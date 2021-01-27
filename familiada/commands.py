@@ -44,7 +44,7 @@ class Familiada(commands.Cog):
     async def zbierz_druzyne(self, ctx, members: commands.Greedy[discord.Member]):
         if len(members) == 0:
             await ctx.send("```\nPrawidłowy sposób użycia:\n@zbierz_druzyne slap\nslap - oznaczenie kogos na discordzie, np @Donald \
-                \nMożna oznaczyć kilku graczy, wtedy wywołujemy każdy nick kolejno oddzielając slapy je spacją.```")
+                \nDo jednej drużyny możemy zapisać kilku graczy, żeby to zrobić wywołujemy każdy nick kolejno oddzielając slapy spacją.```")
         else:
             if len(self.used_colors) == len(res.Colors):
                 await ctx.send("Niestety skończyło mi się miejsce na nowe drużyny :c.")
