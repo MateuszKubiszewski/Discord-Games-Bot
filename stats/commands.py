@@ -52,7 +52,7 @@ class Stats(commands.Cog):
         return json.loads(response['Body'].read().decode('utf-8'))
 
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
-        militaryUnitData = self.GET(self.muLink)
+        militaryUnitData = self.GET()
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
         soldiersData: Dict[int, SoldierData] = {}
         for ID in membersID:
