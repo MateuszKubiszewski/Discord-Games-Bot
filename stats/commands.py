@@ -52,7 +52,7 @@ class Stats(commands.Cog):
         return json.loads(response['Body'].read().decode('utf-8'))
 
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
-        militaryUnitData = self.GET()
+        militaryUnitData = self.GET(self.muLink)
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
         soldiersData: Dict[int, SoldierData] = {}
         for ID in membersID:
@@ -73,7 +73,7 @@ class Stats(commands.Cog):
     def SaveSoldiersData(self, data: Dict[int, SoldierData]) -> None:
         S3.write('stats.txt', json.dumps(data))
    
-    def GET(link: str) -> Dict:
+    def GET(self, link: str) -> Dict:
         page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
         content = urllib.request.urlopen(page).read()
         data = content.decode('ISO-8859-1')
