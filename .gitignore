@@ -18,6 +18,7 @@ soldiers.txt
 punkty.txt
 zapasowy.py
 prawda.txt
+stats.txt
 
 # C extensions
 *.so

@@ -134,7 +134,7 @@ class Familiada(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def podsumowanie(self, ctx):
         if len(self.teams) == 0:
-            await ctx.send("'''\nZapraszam do stworzenia nowej gry.'''")
+            await ctx.send("```\nZapraszam do stworzenia nowej gry.```")
             return
         winner = self.teams[0]
         for team in self.teams:
