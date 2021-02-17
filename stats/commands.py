@@ -22,7 +22,7 @@ class Stats(commands.Cog):
         self.bot = bot
         self.muLink = 'https://www.erepublik.com/en/military/military-unit-data/?groupId=177&panel=members'
         self.citizenLink = 'https://www.erepublik.com/en/main/citizen-profile-json/'
-        self.soldiersData: Dict[int, SoldierData] = {}
+        self.soldiersData: Dict[str, SoldierData] = {}
         self.messages: List[str] = []
 
     @commands.Cog.listener()
@@ -36,8 +36,8 @@ class Stats(commands.Cog):
         soldiersData = self.ReadSoldiersDataFromDatabase()
         currentSoldiersData = self.ReadCurrentSoldiersData()
         for ID in currentSoldiersData.keys():
-            oldData: SoldierData = soldiersData[ID]
-            currentData: SoldierData = currentSoldiersData[ID]
+            oldData: SoldierData = soldiersData[str(ID)]
+            currentData: SoldierData = currentSoldiersData[str(ID)]
             name = oldData["name"]
             link = oldData["profileLink"]
             self.AppendExpLevelMessage(name, link, oldData["expLevel"], currentData["expLevel"])
@@ -54,7 +54,7 @@ class Stats(commands.Cog):
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
         militaryUnitData = self.GET(self.muLink)
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
-        soldiersData: Dict[int, SoldierData] = {}
+        soldiersData: Dict[str, SoldierData] = {}
         for ID in membersID:
             profileLink = self.citizenLink + str(ID)
             citizenData = self.GET(profileLink)
@@ -67,7 +67,7 @@ class Stats(commands.Cog):
                 'groundRank': citizenData["military"]["militaryData"]["rankNumber"],
                 'airRank': citizenData["military"]["militaryData"]["aircraft"]["rankNumber"]
             }
-            soldiersData[ID] = soldierData
+            soldiersData[str(ID)] = soldierData
         return soldiersData
 
     def SaveSoldiersData(self, data: Dict[int, SoldierData]) -> None:
