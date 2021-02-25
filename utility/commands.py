@@ -9,7 +9,7 @@ import re
 from amazons3 import S3
 
 from . import resources as res 
-
+# https://stackoverflow.com/questions/58906183/vs-code-python-interpreter-cant-find-my-venv
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -64,16 +64,16 @@ class Utility(commands.Cog):
     
     @commands.command()
     async def suchar(self, ctx):
-        link = "http://www.kinyen.pl/dowcipy/losowy/"
-        page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
-        content = urllib.request.urlopen(page).read()
-        data = content.decode('UTF-8')
-        match = re.search("(<div class=\\\"joke\\\">)\n.+\n.+", data)
-        string = match.group(0)[21:-9]
-        striing = string.replace("<br />", "\n")
-        striiing = striing.replace("&quot;", "\"")
-        joke = "```\n" + striiing + "```"
-        await ctx.send(joke)
+        # link = "http://www.kinyen.pl/dowcipy/losowy/"
+        # page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
+        # content = urllib.request.urlopen(page).read()
+        # data = content.decode('UTF-8')
+        # match = re.search("(<div class=\\\"joke\\\">)\n.+\n.+", data)
+        # string = match.group(0)[21:-9]
+        # striing = string.replace("<br />", "\n")
+        # striiing = striing.replace("&quot;", "\"")
+        # joke = "```\n" + striiing + "```"
+        await ctx.send("```\nTa komenda jest w trakcie naprawy :( wróci potężniejsza jak tylko nauczę się parsować HTML jak człowiek!```")
     
     @commands.command()
     async def ciekawostka(self, ctx):

@@ -19,6 +19,7 @@ punkty.txt
 zapasowy.py
 prawda.txt
 stats.txt
+log.txt
 
 # C extensions
 *.so

@@ -2,7 +2,7 @@ import os
 import discord
 
 from discord.ext import commands
-from dotenv import load_dotenv
+from dotenv import load_dotenv # type: ignore
 
 # importing cogs
 from familiada import commands as comms
@@ -12,8 +12,8 @@ from zbiorki import commands as z_comms
 # from hangman import hangman as hang
 
 # local run
-# load_dotenv()
-# TOKEN = os.getenv('DISCORD_TOKEN')
+#load_dotenv()
+#TOKEN = os.getenv('DISCORD_TOKEN')
 
 # heroku run
 TOKEN = os.environ["DISCORD_TOKEN"]
