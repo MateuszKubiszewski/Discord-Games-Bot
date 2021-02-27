@@ -103,7 +103,7 @@ class Stats(commands.Cog):
                 
 
     def AppendAirRankMessage(self, soldierName: str, profileLink: str, oldAirRank: int, currentAirRank: int) -> None:
-        if currentAirRank > 43 and currentAirRank > oldAirRank:
+        if currentAirRank > 25 and currentAirRank > oldAirRank:
             for i in range(oldAirRank + 1, currentAirRank + 1):
                 self.messages.append(f"```\n{soldierName} reached {ar.AirRanks[i]}.```")
             self.messages.append(f"```\nProfile link: {profileLink}.```")
