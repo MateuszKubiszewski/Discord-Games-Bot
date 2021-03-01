@@ -86,7 +86,7 @@ class Stats(commands.Cog):
     
     def AppendExpLevelMessage(self, soldierName: str, profileLink: str, oldExpLevel: int, currentExpLevel: int) -> None:
         if currentExpLevel > oldExpLevel:
-            if currentExpLevel % 50 == 0:
+            if currentExpLevel % 50 == 0 or currentExpLevel == 30 or currentExpLevel == 70:
                 self.messages.append(f"```\n{soldierName} reached level {currentExpLevel}.\nProfile link: {profileLink}.```")
     
     def AppendRhMedalsMessage(self, soldierName: str, profileLink: str, oldRhMedals: int, currentRhMedals: int) -> None:
