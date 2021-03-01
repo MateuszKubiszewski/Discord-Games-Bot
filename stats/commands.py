@@ -96,7 +96,7 @@ class Stats(commands.Cog):
     
     def AppendSsMedalsMessage(self, soldierName: str, profileLink: str, oldSsMedals: int, currentSsMedals: int) -> None:
         if currentSsMedals > oldSsMedals:
-            if currentSsMedals % 200 == 0:
+            if currentSsMedals % 200 == 0 or currentSsMedals == 100:
                 self.messages.append(f"```\n{soldierName} reached {currentSsMedals * 250} strength.\nProfile link: {profileLink}.```")
     
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
