@@ -29,7 +29,7 @@ class Stats(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.GoThroughSoldiersData()
-        channel = self.bot.get_channel(515984721055055892)
+        channel = self.bot.get_channel(811664465829036052)
         for message in self.messages:
             await channel.send(message)
 
