@@ -32,6 +32,8 @@ class Stats(commands.Cog):
         channel = self.bot.get_channel(811664465829036052)
         for message in self.messages:
             await channel.send(message)
+        if len(self.messages) == 0:
+            await channel.send("```\nNothing special this time.```")
 
     def GoThroughSoldiersData(self) -> None:
         soldiersData = self.ReadSoldiersDataFromDatabase()
