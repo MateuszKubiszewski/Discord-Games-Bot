@@ -56,6 +56,8 @@ class Stats(commands.Cog):
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
         militaryUnitData = self.GET(self.muLink)
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
+        # adding ShiroToAka from aTGS
+        membersID.append(6567984)
         soldiersData: Dict[str, SoldierData] = {}
         for ID in membersID:
             citizenData = self.GET(self.citizenDataLink + str(ID))
