@@ -1,19 +1,25 @@
 import json
 from discord.ext import commands
+import math
 from typing import List, Dict, TypedDict
-
 import urllib.request
 
 from amazons3 import S3
-from . import airRanks as ar
-from . import groundRanks as gr
+from .medals import medalsAndScale
+from .medals import index
+from .airRanks import AirRanks
+from .groundRanks import GroundRanks
+
+class MedalData(TypedDict):
+    name: str
+    count: int
 
 class SoldierData(TypedDict):
     id: str
     name: str
     expLevel: int
-    rhMedals: int
-    ssMedals: int
+    strength: int
+    medals: List[MedalData]
     groundRank: int
     airRank: int
 
@@ -24,6 +30,7 @@ class Stats(commands.Cog):
         self.citizenDataLink = 'https://www.erepublik.com/en/main/citizen-profile-json/'
         self.citizenProfileLink = 'https://www.erepublik.com/en/citizen/profile/'
         self.soldiersData: Dict[str, SoldierData] = {}
+        self.newMembers: List[str] = {}
         self.messages: List[str] = []
 
     @commands.Cog.listener()
@@ -45,10 +52,14 @@ class Stats(commands.Cog):
                 name = oldData["name"]
                 link = self.citizenProfileLink + str(ID)
                 self.AppendExpLevelMessage(name, link, oldData["expLevel"], currentData["expLevel"])
-                self.AppendRhMedalsMessage(name, link, oldData["rhMedals"], currentData["rhMedals"])
-                self.AppendSsMedalsMessage(name, link, oldData["ssMedals"], currentData["ssMedals"])
+                self.AppendStrengthMessage(name, link, oldData["strength"], currentData["strength"])
+                self.AppendMedalsMessage(name, link, oldData["medals"], currentData["medals"])
                 self.AppendGroundRankMessage(name, link, oldData["groundRank"], currentData["groundRank"])
                 self.AppendAirRankMessage(name, link, oldData["airRank"], currentData["airRank"])
+            else:
+                self.newMembers.append(str(ID))
+        for member in self.newMembers:
+            self.messages.append(f"```A new player has joined TGS! Profile link: {self.citizenProfileLink}{member}.```")
         self.SaveSoldiersData(currentSoldiersData)
 
     def ReadSoldiersDataFromDatabase(self) -> Dict[int, SoldierData]:
@@ -67,11 +78,16 @@ class Stats(commands.Cog):
                 'id': str(ID),
                 'name': citizenData["citizen"]["name"],
                 'expLevel': citizenData["citizen"]["level"],
-                'rhMedals': citizenData["achievements"][8]["count"],
-                'ssMedals': citizenData["achievements"][9]["count"],
+                'strength': citizenData["military"]["militaryData"]["strength"],
+                'medals': [],
                 'groundRank': citizenData["military"]["militaryData"]["rankNumber"],
                 'airRank': citizenData["military"]["militaryData"]["aircraft"]["rankNumber"]
             }
+            for medal in medalsAndScale:
+                soldierData["medals"].append(MedalData(
+                    name = medal,
+                    count = citizenData["achievements"][index[medal]]["count"]
+                ))
             soldiersData[str(ID)] = soldierData
         return soldiersData
 
@@ -85,29 +101,52 @@ class Stats(commands.Cog):
         return json.loads(data)
     
     def AppendExpLevelMessage(self, soldierName: str, profileLink: str, oldExpLevel: int, currentExpLevel: int) -> None:
-        if currentExpLevel > oldExpLevel:
-            if currentExpLevel % 50 == 0 or currentExpLevel == 30 or currentExpLevel == 70:
-                self.messages.append(f"```\n{soldierName} reached level {currentExpLevel}.\nProfile link: {profileLink}.```")
+        if oldExpLevel < currentExpLevel:
+            newLevelsRange: range[int] = range(oldExpLevel + 1, currentExpLevel + 1)
+            smallExpRules = [
+                currentExpLevel < 90,
+                any(x in [30, 50, 70] for x in newLevelsRange)
+            ]
+            bigExpRules = [
+                currentExpLevel > 90,
+                any(x % 100 == 0 for x in newLevelsRange)
+            ]
+            if all(smallExpRules) or all(bigExpRules):
+                levelToPrint = round(currentExpLevel, -1)
+                self.messages.append(f"```\n{soldierName} reached level {levelToPrint}.\nProfile link: {profileLink}.```")
     
-    def AppendRhMedalsMessage(self, soldierName: str, profileLink: str, oldRhMedals: int, currentRhMedals: int) -> None:
-        if currentRhMedals > oldRhMedals:
-            if currentRhMedals % 50 == 0:
-                self.messages.append(f"```\n{soldierName} reached {currentRhMedals} RH medals.\nProfile link: {profileLink}.```")
+    def AppendStrengthMessage(self, soldierName: str, profileLink: str, oldStrength: int, currentStrength: int) -> None:
+        if oldStrength < currentStrength:
+            smallStrengthRules = [
+                currentStrength < 30000,
+                oldStrength / 25000 < currentStrength / 25000
+            ]
+            bigStrengthRules = [
+                currentStrength > 30000,
+                oldStrength / 50000 < currentStrength / 50000
+            ]
+            if all(bigStrengthRules) or all(smallStrengthRules):
+                strengthToPrint = round(currentStrength, -3)
+                self.messages.append(f"```\n{soldierName} reached {strengthToPrint} strength.\nProfile link: {profileLink}.```")
     
-    def AppendSsMedalsMessage(self, soldierName: str, profileLink: str, oldSsMedals: int, currentSsMedals: int) -> None:
-        if currentSsMedals > oldSsMedals:
-            if currentSsMedals % 200 == 0 or currentSsMedals == 100:
-                self.messages.append(f"```\n{soldierName} reached {currentSsMedals * 250} strength.\nProfile link: {profileLink}.```")
+    def AppendMedalsMessage(self, soldierName: str, profileLink: str, oldMedalData: List[MedalData], currentMedalData: List[MedalData]) -> None:
+        for oldData, currentData in zip(oldMedalData, currentMedalData):
+            if oldData["count"] < currentData["count"]:
+                newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
+                if any(x % medalsAndScale[oldData["name"]] == 0 for x in newMedalsRange):
+                    medalsToPrint = round(currentData["count"], -int(math.log10(medalsAndScale[oldData["name"]])))
+                    self.messages.append(f"```\n{soldierName} reached {medalsToPrint} {oldData['name']} medals.\nProfile link: {profileLink}.```")
     
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
-        if currentGroundRank > 61 and currentGroundRank > oldGroundRank:
-            for i in range(oldGroundRank + 1, currentGroundRank + 1):
-                self.messages.append(f"```\n{soldierName} reached {gr.GroundRanks[i]}.```")
-            self.messages.append(f"```\nProfile link: {profileLink}.```")
-                
+        if currentGroundRank > oldGroundRank:
+            if currentGroundRank > 65 or currentGroundRank == 62:
+                for i in range(oldGroundRank + 1, currentGroundRank + 1):
+                    self.messages.append(f"```\n{soldierName} reached {GroundRanks[i]}.```")
+                self.messages.append(f"```\nProfile link: {profileLink}.```")
 
     def AppendAirRankMessage(self, soldierName: str, profileLink: str, oldAirRank: int, currentAirRank: int) -> None:
-        if currentAirRank > 25 and currentAirRank > oldAirRank:
-            for i in range(oldAirRank + 1, currentAirRank + 1):
-                self.messages.append(f"```\n{soldierName} reached {ar.AirRanks[i]}.```")
-            self.messages.append(f"```\nProfile link: {profileLink}.```")
+        if currentAirRank > oldAirRank:
+            if currentAirRank > 43 and currentAirRank in [26, 32, 38, 39]:
+                for i in range(oldAirRank + 1, currentAirRank + 1):
+                    self.messages.append(f"```\n{soldierName} reached {AirRanks[i]}.```")
+                self.messages.append(f"```\nProfile link: {profileLink}.```")
