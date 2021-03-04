@@ -59,7 +59,7 @@ class Stats(commands.Cog):
             else:
                 self.newMembers.append(str(ID))
         for member in self.newMembers:
-            self.messages.append(f"```A new player has joined TGS! Profile link: {self.citizenProfileLink}{member}.```")
+            self.messages.append(f"```\nA new player has joined TGS!\nProfile link: {self.citizenProfileLink}{member}.```")
         self.SaveSoldiersData(currentSoldiersData)
 
     def ReadSoldiersDataFromDatabase(self) -> Dict[int, SoldierData]:
@@ -119,14 +119,14 @@ class Stats(commands.Cog):
         if oldStrength < currentStrength:
             smallStrengthRules = [
                 currentStrength < 30000,
-                oldStrength / 25000 < currentStrength / 25000
+                oldStrength % 25000 > currentStrength % 25000
             ]
             bigStrengthRules = [
                 currentStrength > 30000,
-                oldStrength / 50000 < currentStrength / 50000
+                oldStrength % 50000 > currentStrength % 50000
             ]
             if all(bigStrengthRules) or all(smallStrengthRules):
-                strengthToPrint = round(currentStrength, -3)
+                strengthToPrint = int(round(currentStrength, -3))
                 self.messages.append(f"```\n{soldierName} reached {strengthToPrint} strength.\nProfile link: {profileLink}.```")
     
     def AppendMedalsMessage(self, soldierName: str, profileLink: str, oldMedalData: List[MedalData], currentMedalData: List[MedalData]) -> None:
