@@ -31,7 +31,7 @@ class Stats(commands.Cog):
         self.citizenDataLink = 'https://www.erepublik.com/en/main/citizen-profile-json/'
         self.citizenProfileLink = 'https://www.erepublik.com/en/citizen/profile/'
         self.soldiersData: Dict[str, SoldierData] = {}
-        self.newMembers: List[str] = {}
+        self.newMembers: List[str] = []
         self.messages: List[str] = []
 
     @commands.Cog.listener()
