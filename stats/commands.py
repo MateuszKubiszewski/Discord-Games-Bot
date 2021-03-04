@@ -5,10 +5,11 @@ from typing import List, Dict, TypedDict
 import urllib.request
 
 from amazons3 import S3
+from .additionalIds import additionalIds
+from .airRanks import airRanks
+from .groundRanks import groundRanks
 from .medals import medalsAndScale
 from .medals import index
-from .airRanks import AirRanks
-from .groundRanks import GroundRanks
 
 class MedalData(TypedDict):
     name: str
@@ -69,8 +70,8 @@ class Stats(commands.Cog):
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
         militaryUnitData = self.GET(self.muLink)
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
-        # adding ShiroToAka from aTGS
-        membersID.append(6567984)
+        # adding members from aTGS
+        membersID.extend(additionalIds)
         soldiersData: Dict[str, SoldierData] = {}
         for ID in membersID:
             citizenData = self.GET(self.citizenDataLink + str(ID))
@@ -133,20 +134,20 @@ class Stats(commands.Cog):
         for oldData, currentData in zip(oldMedalData, currentMedalData):
             if oldData["count"] < currentData["count"]:
                 newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
-                if any(x % medalsAndScale[oldData["name"]] == 0 for x in newMedalsRange):
-                    medalsToPrint = round(currentData["count"], -int(math.log10(medalsAndScale[oldData["name"]])))
-                    self.messages.append(f"```\n{soldierName} reached {medalsToPrint} {oldData['name']} medals.\nProfile link: {profileLink}.```")
+                for x in newMedalsRange:
+                    if x % medalsAndScale[oldData["name"]] == 0:
+                        self.messages.append(f"```\n{soldierName} reached {x} {oldData['name']} medals.\nProfile link: {profileLink}.```")
     
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
         if currentGroundRank > oldGroundRank:
             if currentGroundRank > 65 or currentGroundRank == 62:
                 for i in range(oldGroundRank + 1, currentGroundRank + 1):
-                    self.messages.append(f"```\n{soldierName} reached {GroundRanks[i]}.```")
+                    self.messages.append(f"```\n{soldierName} reached {groundRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
 
     def AppendAirRankMessage(self, soldierName: str, profileLink: str, oldAirRank: int, currentAirRank: int) -> None:
         if currentAirRank > oldAirRank:
             if currentAirRank > 43 and currentAirRank in [26, 32, 38, 39]:
                 for i in range(oldAirRank + 1, currentAirRank + 1):
-                    self.messages.append(f"```\n{soldierName} reached {AirRanks[i]}.```")
+                    self.messages.append(f"```\n{soldierName} reached {airRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")

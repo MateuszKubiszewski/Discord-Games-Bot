@@ -1,4 +1,4 @@
-AirRanks = {
+airRanks = {
     1: "Airman",
     2: "Airman 1st Class",
     3: "Airman 1st Class*",

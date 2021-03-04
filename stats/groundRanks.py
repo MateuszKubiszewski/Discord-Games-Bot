@@ -1,4 +1,4 @@
-GroundRanks = {
+groundRanks = {
     1: "Recruit",
     2: "Private",
     3: "Private*",
