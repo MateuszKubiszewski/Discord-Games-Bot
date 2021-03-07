@@ -106,7 +106,7 @@ class Stats(commands.Cog):
             newLevelsRange: range[int] = range(oldExpLevel + 1, currentExpLevel + 1)
             smallExpRules = [
                 currentExpLevel < 90,
-                any(x in [30, 50, 70] for x in newLevelsRange)
+                any(x in [35, 50, 70] for x in newLevelsRange)
             ]
             bigExpRules = [
                 currentExpLevel > 90,
