@@ -86,7 +86,7 @@ Answers = [
     ['Kherehabath', 'Rapaport', 'StrozeR', 'Sarandir', 'Yogobella'],
     ['w kolejce', 'w korku', 'w drzwiach', 'w przejściu', 'w oknie', 'w kącie'],
     ['pieniądze', 'działkę', 'pozwolenie', 'projekt', 'ekipę', 'umiejętności'],
-    ['wzdychać', 'spać', 'wierzyć', 'kopać', 'zaciągać się', 'nurkować']
+    ['wzdychać', 'spać', 'wierzyć', 'kopać', 'zaciągać się', 'nurkować'],
     ['gdakanie', 'pianie', 'kwakanie', 'gęganie', 'gulgot'],
     ['oczna', 'muszkatałowa', 'meblowa'],
     ['warzywny', 'mięsny', 'piekarnia', 'nabiałowy', 'cukiernia', 'garmażeria'],
