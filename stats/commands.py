@@ -114,6 +114,8 @@ class Stats(commands.Cog):
             ]
             if all(smallExpRules) or all(bigExpRules):
                 levelToPrint = round(currentExpLevel, -1)
+                if currentExpLevel < 50:
+                    levelToPrint = 35
                 self.messages.append(f"```\n{soldierName} reached level {levelToPrint}.\nProfile link: {profileLink}.```")
     
     def AppendStrengthMessage(self, soldierName: str, profileLink: str, oldStrength: int, currentStrength: int) -> None:
