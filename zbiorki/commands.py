@@ -8,7 +8,7 @@ from discord.ext import commands
 import urllib
 
 from amazons3 import S3
-
+# trzeba wywalic komende daj_link, zapdejtwoac poradnik
 class Soldier:
     def __init__(self, erep_id: int, disc: str, name: str):
         self.erep_id = erep_id

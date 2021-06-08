@@ -1,4 +1,5 @@
 import json
+import discord
 from discord.ext import commands
 import math
 from typing import List, Dict, TypedDict
@@ -42,6 +43,20 @@ class Stats(commands.Cog):
             await channel.send(message)
         if len(self.messages) == 0:
             await channel.send("```\nNothing special this time.```")
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def lista(self, ctx):
+        data: str = ''
+        militaryUnitData = self.GET(self.muLink)
+        membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
+        for ID in membersID:
+            citizenData = self.GET(self.citizenDataLink + str(ID))
+            data += f'{citizenData["citizen"]["name"]}: {self.citizenProfileLink + str(ID)}\n'
+        with open('soldiers_list.txt', 'w+') as f:
+            f.write(data)
+        with open('soldiers_list.txt', 'rb') as f:
+            await ctx.send(file = discord.File(f, 'soldiers_list.txt'))
 
     def GoThroughSoldiersData(self) -> None:
         soldiersData = self.ReadSoldiersDataFromDatabase()

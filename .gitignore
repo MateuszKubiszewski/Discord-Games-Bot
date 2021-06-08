@@ -11,10 +11,12 @@ resources/
 familiada_skriny.png
 hangman/
 test.py
+test2.py
 test.txt
 help_dowodca.png
 help_zolnierz.png
 soldiers.txt
+soldiers_list.txt
 punkty.txt
 zapasowy.py
 prawda.txt
