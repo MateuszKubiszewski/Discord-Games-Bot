@@ -1,13 +1,11 @@
+from bs4 import BeautifulSoup
 import discord
-import random
-import json
 from discord.ext import commands
-
+import json
+import random
 import urllib.request
-import re
 
 from amazons3 import S3
-
 from . import resources as res 
 # https://stackoverflow.com/questions/58906183/vs-code-python-interpreter-cant-find-my-venv
 class Utility(commands.Cog):
@@ -64,16 +62,16 @@ class Utility(commands.Cog):
     
     @commands.command()
     async def suchar(self, ctx):
-        # link = "http://www.kinyen.pl/dowcipy/losowy/"
-        # page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
-        # content = urllib.request.urlopen(page).read()
-        # data = content.decode('UTF-8')
-        # match = re.search("(<div class=\\\"joke\\\">)\n.+\n.+", data)
-        # string = match.group(0)[21:-9]
-        # striing = string.replace("<br />", "\n")
-        # striiing = striing.replace("&quot;", "\"")
-        # joke = "```\n" + striiing + "```"
-        await ctx.send("```\nTa komenda jest w trakcie naprawy :( wróci potężniejsza jak tylko nauczę się parsować HTML jak człowiek!```")
+        soup = self.get_soup_from_link_with_guard("http://piszsuchary.pl/losuj")
+        joke = soup.find("div", {"class": "kot_na_suchara"}).find("img")['alt']
+        await ctx.send(f"```\n{joke}```")
+    
+    @commands.command()
+    async def bash(self, ctx):
+        soup = self.get_soup_from_link_with_guard("http://bash.org.pl/random/")
+        strips = soup.find("div", {"class": "quote post-content post-body"}).stripped_strings
+        joke = '\n'.join(strip for strip in strips)
+        await ctx.send(f"```\n{joke}```")
     
     @commands.command()
     async def ciekawostka(self, ctx):
@@ -90,4 +88,16 @@ class Utility(commands.Cog):
 
     def drukuj_ciekawostke(self, number):
         return "```\n" + res.Ciekawostki[number] + "```"
+
+    def get_soup_from_link_with_guard(self, link: str) -> BeautifulSoup:
+        soup = None
+        while not soup:
+            soup = self.get_soup_from_link(link)
+        return soup
+
+    def get_soup_from_link(self, link: str) -> BeautifulSoup:
+        page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'})
+        content = urllib.request.urlopen(page).read()
+        data = content.decode('UTF-8')
+        return BeautifulSoup(data, 'html.parser')
 

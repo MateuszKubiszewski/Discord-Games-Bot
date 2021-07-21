@@ -1,8 +1,4 @@
-import os
-import discord
-
 from discord.ext import commands
-from dotenv import load_dotenv # type: ignore
 
 # importing cogs
 from familiada import commands as comms
@@ -11,11 +7,13 @@ from utility import commands as u_comms
 from zbiorki import commands as z_comms
 # from hangman import hangman as hang
 
-# local run
-#load_dotenv()
-#TOKEN = os.getenv('DISCORD_TOKEN')
+# # local run
+# from dotenv import load_dotenv # type: ignore
+# load_dotenv()
+# TOKEN = os.getenv('DISCORD_TOKEN')
 
 # heroku run
+import os
 TOKEN = os.environ["DISCORD_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")

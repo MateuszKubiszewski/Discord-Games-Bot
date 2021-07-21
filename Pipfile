@@ -8,6 +8,7 @@ python-dotenv = "*"
 "discord.py" = "*"
 boto3 = "*"
 jsonpickle = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 

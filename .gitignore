@@ -22,6 +22,7 @@ zapasowy.py
 prawda.txt
 stats.txt
 log.txt
+suchary_*
 
 # C extensions
 *.so
