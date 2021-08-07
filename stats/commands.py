@@ -1,12 +1,12 @@
 import json
 import discord
 from discord.ext import commands
-import math
 from typing import List, Dict, TypedDict
 import urllib.request
 
 from amazons3 import S3
-from .additionalIds import additionalIds
+from .additionalIds import additionalCitizenIds
+from .additionalIds import militaryUnitIds
 from .airRanks import airRanks
 from .groundRanks import groundRanks
 from .medals import medalsAndScale
@@ -28,12 +28,14 @@ class SoldierData(TypedDict):
 class Stats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.muLink = 'https://www.erepublik.com/en/military/military-unit-data/?groupId=177&panel=members'
         self.citizenDataLink = 'https://www.erepublik.com/en/main/citizen-profile-json/'
         self.citizenProfileLink = 'https://www.erepublik.com/en/citizen/profile/'
         self.soldiersData: Dict[str, SoldierData] = {}
-        self.newMembers: List[str] = []
+        self.newMembersIds: List[str] = []
         self.messages: List[str] = []
+
+    def muDataLink(self, muId: str) -> str:
+        return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -43,27 +45,13 @@ class Stats(commands.Cog):
             await channel.send(message)
         if len(self.messages) == 0:
             await channel.send("```\nNothing special this time.```")
-    
-    @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def lista(self, ctx):
-        data: str = ''
-        militaryUnitData = self.GET(self.muLink)
-        membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
-        for ID in membersID:
-            citizenData = self.GET(self.citizenDataLink + str(ID))
-            data += f'{citizenData["citizen"]["name"]}: {self.citizenProfileLink + str(ID)}\n'
-        with open('soldiers_list.txt', 'w+') as f:
-            f.write(data)
-        with open('soldiers_list.txt', 'rb') as f:
-            await ctx.send(file = discord.File(f, 'soldiers_list.txt'))
 
     def GoThroughSoldiersData(self) -> None:
-        soldiersData = self.ReadSoldiersDataFromDatabase()
+        oldSoldiersData = self.ReadSoldiersDataFromDatabase()
         currentSoldiersData = self.ReadCurrentSoldiersData()
         for ID in currentSoldiersData.keys():
-            if str(ID) in soldiersData:
-                oldData: SoldierData = soldiersData[str(ID)]
+            if str(ID) in oldSoldiersData:
+                oldData: SoldierData = oldSoldiersData[str(ID)]
                 currentData: SoldierData = currentSoldiersData[str(ID)]
                 name = oldData["name"]
                 link = self.citizenProfileLink + str(ID)
@@ -73,9 +61,12 @@ class Stats(commands.Cog):
                 self.AppendGroundRankMessage(name, link, oldData["groundRank"], currentData["groundRank"])
                 self.AppendAirRankMessage(name, link, oldData["airRank"], currentData["airRank"])
             else:
-                self.newMembers.append(str(ID))
-        for member in self.newMembers:
-            self.messages.append(f"```\nA new player has joined TGS!\nProfile link: {self.citizenProfileLink}{member}.```")
+                self.newMembersIds.append(str(ID))
+        for member in self.newMembersIds:
+            self.messages.append(f"```\nA new player has joined TGS or TGS Academy!\nProfile link: {self.citizenProfileLink}{member}.```")
+        for ID in oldSoldiersData:
+            if ID not in currentSoldiersData:
+                self.messages.append(f"```\nA player has left TGS or TGS Academy!\nProfile link: {self.citizenProfileLink}{ID}.```")
         self.SaveSoldiersData(currentSoldiersData)
 
     def ReadSoldiersDataFromDatabase(self) -> Dict[int, SoldierData]:
@@ -83,13 +74,14 @@ class Stats(commands.Cog):
         return json.loads(response['Body'].read().decode('utf-8'))
 
     def ReadCurrentSoldiersData(self) -> Dict[int, SoldierData]:
-        militaryUnitData = self.GET(self.muLink)
-        membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
-        # adding members from aTGS
-        membersID.extend(additionalIds)
+        TgsData = self.GetDataDictionaryFromPage(self.muDataLink(militaryUnitIds["TGS"]))
+        TgsAcademyData = self.GetDataDictionaryFromPage(self.muDataLink(militaryUnitIds["ATGS"]))
+        membersIDs: List[int] = TgsData["panelContents"]["membersList"] + TgsAcademyData["panelContents"]["membersList"]
+        # adding some friendly profiles which are neither in TGS nor in ATGS
+        membersIDs += additionalCitizenIds
         soldiersData: Dict[str, SoldierData] = {}
-        for ID in membersID:
-            citizenData = self.GET(self.citizenDataLink + str(ID))
+        for ID in membersIDs:
+            citizenData = self.GetDataDictionaryFromPage(self.citizenDataLink + str(ID))
             soldierData: SoldierData = {
                 'id': str(ID),
                 'name': citizenData["citizen"]["name"],
@@ -110,8 +102,8 @@ class Stats(commands.Cog):
     def SaveSoldiersData(self, data: Dict[int, SoldierData]) -> None:
         S3.write('stats.txt', json.dumps(data))
    
-    def GET(self, link: str) -> Dict:
-        page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'}) 
+    def GetDataDictionaryFromPage(self, page: str) -> Dict:
+        page = urllib.request.Request(page, headers = {'User-Agent': 'Mozilla/5.0'}) 
         content = urllib.request.urlopen(page).read()
         data = content.decode('ISO-8859-1')
         return json.loads(data)

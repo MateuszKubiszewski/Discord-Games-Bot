@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import json
 import random
+from typing import List
 import urllib.request
 
 from amazons3 import S3
@@ -15,7 +16,21 @@ class Utility(commands.Cog):
         response = S3.read('punkty.txt')
         self.punktyTGS = json.loads(response['Body'].read().decode('utf-8'))
         random.seed()
-   
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def lista(self, ctx):
+        data: str = ''
+        militaryUnitData = json.loads(self.GetPageData('https://www.erepublik.com/en/military/military-unit-data/?groupId=2256&panel=members'))
+        membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
+        for ID in membersID:
+            citizenData = self.GetPageData(f'https://www.erepublik.com/en/main/citizen-profile-json/{str(ID)}')
+            data += f'{citizenData["citizen"]["name"]}: https://www.erepublik.com/en/citizen/profile/{str(ID)}\n'
+        with open('soldiers_list.txt', 'w+') as f:
+            f.write(data)
+        with open('soldiers_list.txt', 'rb') as f:
+            await ctx.send(file = discord.File(f, 'soldiers_list.txt'))
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def dodaj_punkt(self, ctx, new_members: commands.Greedy[discord.Member]):
@@ -96,8 +111,11 @@ class Utility(commands.Cog):
         return soup
 
     def get_soup_from_link(self, link: str) -> BeautifulSoup:
-        page = urllib.request.Request(link, headers = {'User-Agent': 'Mozilla/5.0'})
-        content = urllib.request.urlopen(page).read()
-        data = content.decode('UTF-8')
+        data = self.GetPageData(link)
         return BeautifulSoup(data, 'html.parser')
+    
+    def GetPageData(self, page: str) -> str:
+        page = urllib.request.Request(page, headers = {'User-Agent': 'Mozilla/5.0'}) 
+        content = urllib.request.urlopen(page).read()
+        return content.decode('ISO-8859-1')
 
