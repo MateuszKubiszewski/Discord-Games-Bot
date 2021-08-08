@@ -2,6 +2,7 @@ from discord.ext import commands
 
 # importing cogs
 from familiada import commands as comms
+from spying import commands as spying_comms
 from stats import commands as s_comms 
 from utility import commands as u_comms
 from zbiorki import commands as z_comms
@@ -18,6 +19,7 @@ TOKEN = os.environ["DISCORD_TOKEN"]
 
 bot = commands.Bot(command_prefix="@")
 bot.add_cog(comms.Familiada(bot))
+bot.add_cog(spying_comms.Spying(bot))
 bot.add_cog(s_comms.Stats(bot))
 bot.add_cog(u_comms.Utility(bot))
 bot.add_cog(z_comms.Zbiorki(bot))

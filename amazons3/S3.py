@@ -1,14 +1,13 @@
 import os
 import boto3
 
-from dotenv import load_dotenv
-
 # heroku run
 ACCESS_KEY_ID = os.environ["ACCESS_KEY_ID"]
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 SECRET_ACCESS_KEY = os.environ["SECRET_ACCESS_KEY"]
 
-# local run
+# # local run
+# from dotenv import load_dotenv
 # load_dotenv()
 # ACCESS_KEY_ID = os.getenv("ACCESS_KEY_ID")
 # S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")

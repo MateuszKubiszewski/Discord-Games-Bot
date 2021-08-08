@@ -23,6 +23,7 @@ prawda.txt
 stats.txt
 log.txt
 suchary_*
+spying-stats.txt
 
 # C extensions
 *.so

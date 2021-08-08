@@ -13,13 +13,5 @@ militaryUnitIds = {
     # Akademia TGS [stare TGS]
     "ATGS": "177",
     # GKTGS
-    "GKTGS": "715",
-    # PCA
-    "PCA": "945",
-    # GROM
-    "GROM": "21",
-    # PMTF
-    "PMTF": "33",
-    # Lokalni Patrioci
-    "LP": "322"
+    "GKTGS": "715"
 }
