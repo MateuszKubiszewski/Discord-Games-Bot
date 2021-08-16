@@ -9,6 +9,7 @@ python-dotenv = "*"
 boto3 = "*"
 jsonpickle = "*"
 beautifulsoup4 = "*"
+unidecode = "*"
 
 [dev-packages]
 
