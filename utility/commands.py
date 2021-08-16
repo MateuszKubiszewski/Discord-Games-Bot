@@ -80,14 +80,16 @@ class Utility(commands.Cog):
     async def suchar(self, ctx):
         soup = self.get_soup_from_link_with_guard("http://piszsuchary.pl/losuj")
         joke = soup.find("div", {"class": "kot_na_suchara"}).find("img")['alt']
-        await ctx.send(f"```\n{unidecode(joke)}```")
+        joke_utf = unidecode(joke, 'utf-8')
+        await ctx.send(f"```\n{unidecode(joke_utf)}```")
     
     @commands.command()
     async def bash(self, ctx):
         soup = self.get_soup_from_link_with_guard("http://bash.org.pl/random/")
         strips = soup.find("div", {"class": "quote post-content post-body"}).stripped_strings
         joke = '\n'.join(strip for strip in strips)
-        await ctx.send(f"```\n{unidecode(joke)}```")
+        joke_utf = unidecode(joke, 'utf-8')
+        await ctx.send(f"```\n{unidecode(joke_utf)}```")
     
     @commands.command()
     async def ciekawostka(self, ctx):
