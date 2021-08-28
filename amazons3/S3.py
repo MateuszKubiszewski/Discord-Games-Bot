@@ -20,3 +20,6 @@ def write(filename: str, content: str):
 
 def read(filename: str):
     return s3.Object(S3_BUCKET_NAME, filename).get()
+
+def readImage(imagePath: str):
+    return s3.Object(S3_BUCKET_NAME, imagePath).get().get('Body').read()
