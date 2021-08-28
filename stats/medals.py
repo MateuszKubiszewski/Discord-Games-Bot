@@ -1,11 +1,14 @@
 medalsAndScale = {
     "Freedom Fighter": 100,
     "Congress Member": 10,
+    "Country President": 1,
     "Battle Hero": 100,
     "Sky Hero": 100,
     "Campaign Hero": 10,
     "Resistance Hero": 100,
     "Mercenary": 10,
+    "Top Fighter": 1,
+    "Top Aviator": 1,
     "True Patriot": 100,
     "Prestige Hunter": 10
 }
