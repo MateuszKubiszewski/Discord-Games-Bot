@@ -62,7 +62,7 @@ class Stats(commands.Cog):
             await channel.send("```\nNothing special this time.```")
         # new messages [WIP]
         channel_beta = self.bot.get_channel(881189575052116028)
-        for new_message in self.imagesData:
+        for new_message in self.new_messages:
             self.PrepareImage(new_message)
             await channel_beta.send(file=discordFile("result.png"))
 
