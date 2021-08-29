@@ -204,11 +204,12 @@ class Stats(commands.Cog):
         image_width = img.width
         image_height = img.height
         
-        myFont = ImageFont.truetype("./fonts/DejaVuSans.ttf", 40)
+        font = S3.readFont("fonts/DejaVuSans.ttf")
+        myFont = ImageFont.truetype(font, 40)
         w, h = myFont.getsize(message)
         w2, h2 = myFont.getsize("Gratulacje!")
         if w > image_width:
-            myFont = ImageFont.truetype("./fonts/DejaVuSans.ttf", 35)
+            myFont = ImageFont.truetype(font, 35)
             w, h = myFont.getsize(message)
             w2, h2 = myFont.getsize("Gratulacje!")
 

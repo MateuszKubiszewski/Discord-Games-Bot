@@ -23,3 +23,6 @@ def read(filename: str):
 
 def readImage(imagePath: str):
     return s3.Object(S3_BUCKET_NAME, imagePath).get().get('Body').read()
+
+def readFont(fontPath: str):
+    return s3.Object(S3_BUCKET_NAME, fontPath).get().get('Body')
