@@ -173,7 +173,7 @@ class Stats(commands.Cog):
                 for x in newMedalsRange:
                     if x % scale == 0:
                         self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
-                        last_message = self.new_messages[self.new_messages.count - 1]
+                        last_message = self.new_messages[len(self.new_messages) - 1]
                         if soldierName in last_message and medalName in last_message:
                             self.new_messages.remove(last_message)
                         self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
