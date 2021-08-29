@@ -24,6 +24,9 @@ stats.txt
 log.txt
 suchary_*
 spying-stats.txt
+pillow-test.py
+images/
+fonts/
 
 # C extensions
 *.so

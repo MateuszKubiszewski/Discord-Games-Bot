@@ -10,6 +10,7 @@ boto3 = "*"
 jsonpickle = "*"
 beautifulsoup4 = "*"
 unidecode = "*"
+pillow = "*"
 
 [dev-packages]
 

@@ -1,6 +1,9 @@
-import json
-import discord
+from discord import File as discordFile
 from discord.ext import commands
+from io import BytesIO
+import json
+from PIL import Image, ImageDraw, ImageFont
+from secrets import randbelow
 from typing import List, Dict, TypedDict
 import urllib.request
 
@@ -9,8 +12,18 @@ from .additionalIds import additionalCitizenIds
 from .additionalIds import militaryUnitIds
 from .airRanks import airRanks
 from .groundRanks import groundRanks
+from .notifyingData import englishPlayers
+from .notifyingData import femalePlayers
+from .notifyingData import NotificationType
+from .notifyingData import soldiersToNotifyDiscordIds
 from .medals import medalsAndScale
 from .medals import index
+
+class ImageData(TypedDict):
+    player: str
+    newNumberMilestone: int
+    newTextMilestone: str
+    notificationType: NotificationType
 
 class MedalData(TypedDict):
     name: str
@@ -33,6 +46,7 @@ class Stats(commands.Cog):
         self.soldiersData: Dict[str, SoldierData] = {}
         self.newMembersIds: List[str] = []
         self.messages: List[str] = []
+        self.new_messages: List[str] = []
 
     def muDataLink(self, muId: str) -> str:
         return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
@@ -40,11 +54,17 @@ class Stats(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.GoThroughSoldiersData()
+        # old messages
         channel = self.bot.get_channel(811664465829036052)
         for message in self.messages:
             await channel.send(message)
         if len(self.messages) == 0:
             await channel.send("```\nNothing special this time.```")
+        # new messages [WIP]
+        channel_beta = self.bot.get_channel(881189575052116028)
+        for new_message in self.imagesData:
+            self.PrepareImage(new_message)
+            await channel_beta.send(file=discordFile("result.png"))
 
     def GoThroughSoldiersData(self) -> None:
         oldSoldiersData = self.ReadSoldiersDataFromDatabase()
@@ -124,6 +144,7 @@ class Stats(commands.Cog):
                 if currentExpLevel < 50:
                     levelToPrint = 35
                 self.messages.append(f"```\n{soldierName} reached level {levelToPrint}.\nProfile link: {profileLink}.```")
+                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.EXP, levelToPrint))
     
     def AppendStrengthMessage(self, soldierName: str, profileLink: str, oldStrength: int, currentStrength: int) -> None:
         if oldStrength < currentStrength:
@@ -138,21 +159,33 @@ class Stats(commands.Cog):
             if all(bigStrengthRules) or all(smallStrengthRules):
                 strengthToPrint = int(round(currentStrength, -3))
                 self.messages.append(f"```\n{soldierName} reached {strengthToPrint} strength.\nProfile link: {profileLink}.```")
+                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.STRENGTH, strengthToPrint))
     
     def AppendMedalsMessage(self, soldierName: str, profileLink: str, oldMedalData: List[MedalData], currentMedalData: List[MedalData]) -> None:
+        # should be adjusted so it takes data from dictionary not one by one
         for oldData, currentData in zip(oldMedalData, currentMedalData):
+            medalName = oldData["name"]
+            scale = medalsAndScale[medalName]
+            if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
+                scale = 1000
             if oldData["count"] < currentData["count"]:
                 newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
                 for x in newMedalsRange:
-                    if x % medalsAndScale[oldData["name"]] == 0:
-                        self.messages.append(f"```\n{soldierName} reached {x} {oldData['name']} medals.\nProfile link: {profileLink}.```")
-    
+                    if x % scale == 0:
+                        self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
+                        last_message = self.new_messages[self.new_messages.count - 1]
+                        if soldierName in last_message and medalName in last_message:
+                            self.new_messages.remove(last_message)
+                        self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
+                            newNumberMilestone=x, newTextMilestone=medalName))
+
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
         if currentGroundRank > oldGroundRank:
             if currentGroundRank > 65 or currentGroundRank == 62:
                 for i in range(oldGroundRank + 1, currentGroundRank + 1):
                     self.messages.append(f"```\n{soldierName} reached {groundRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
+                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentGroundRank]))
 
     def AppendAirRankMessage(self, soldierName: str, profileLink: str, oldAirRank: int, currentAirRank: int) -> None:
         if currentAirRank > oldAirRank:
@@ -160,3 +193,63 @@ class Stats(commands.Cog):
                 for i in range(oldAirRank + 1, currentAirRank + 1):
                     self.messages.append(f"```\n{soldierName} reached {airRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
+                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentAirRank]))
+
+    def PrepareImage(self, message: str) -> None:
+        imageIndex = randbelow(46)
+        imageFromS3 = S3.readImage(f"image/{imageIndex}.png")
+        img = Image.open(BytesIO(imageFromS3))
+        editable_img = ImageDraw.Draw(img)
+        image_width = img.width
+        image_height = img.height
+        
+        myFont = ImageFont.truetype("./fonts/DejaVuSans.ttf", 40)
+        w, h = myFont.getsize(message)
+        w2, h2 = myFont.getsize("Gratulacje!")
+        if w > image_width:
+            myFont = ImageFont.truetype("./fonts/DejaVuSans.ttf", 35)
+            w, h = myFont.getsize(message)
+            w2, h2 = myFont.getsize("Gratulacje!")
+
+        editable_img.text(((image_width - w) / 2, image_height - 96), message, fill="white", font=myFont)
+        editable_img.text(((image_width - w2) / 2, image_height - 50), "Gratulacje!", fill="white", font=myFont)
+        img.save("result.png", "PNG")
+    
+    def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
+        if player in englishPlayers:
+            return self.GetEnglishMessage(player, notificationType, newNumberMilestone, newTextMilestone)
+        else:
+            return self.GetPolishMessage(player, notificationType, newNumberMilestone, newTextMilestone)
+
+    def GetEnglishMessage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
+        # XY reached level XX!
+        # XY reached XX strength!
+        # XY reached XX YY medals!
+        # XY reached YY!
+        message = player + " reached "
+        if notificationType == NotificationType.EXP:
+            message += f"level {newNumberMilestone}!"
+        elif notificationType == NotificationType.STRENGTH:
+            message += f"{newNumberMilestone} strength!"
+        elif notificationType == NotificationType.MEDAL:
+            message == f"{newNumberMilestone} {newTextMilestone} medals!"
+        else:
+            message += f"{newTextMilestone}!"
+        return message
+
+    def GetPolishMessage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
+        # XY zdobył/a XX poziom!
+        # XY zdobył/a XX punktów siły!
+        # XY zdobył/a XX medali YY!
+        # XY zdobył/a rangę YY!
+        verb = " zdobyła " if player in femalePlayers else " zdobył "
+        message = player + verb
+        if notificationType == NotificationType.EXP:
+            message += f"{newNumberMilestone} poziom!"
+        elif notificationType == NotificationType.STRENGTH:
+            message += f"{newNumberMilestone} punktów siły!"
+        elif notificationType == NotificationType.MEDAL:
+            message == f"{newNumberMilestone} medali {newTextMilestone}!"
+        else:
+            message += f"rangę {newTextMilestone}!"
+        return message
