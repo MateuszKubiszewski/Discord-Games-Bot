@@ -197,8 +197,8 @@ class Stats(commands.Cog):
                 self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentAirRank]))
 
     def PrepareImage(self, message: str) -> None:
-        imageIndex = randbelow(46)
-        imageFromS3 = S3.readImage(f"image/{imageIndex}.png")
+        imageIndex = randbelow(45) + 1
+        imageFromS3 = S3.readImage(f"images/{imageIndex}.png")
         img = Image.open(BytesIO(imageFromS3))
         editable_img = ImageDraw.Draw(img)
         image_width = img.width
