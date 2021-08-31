@@ -4,6 +4,7 @@ from io import BytesIO
 import json
 from PIL import Image, ImageDraw, ImageFont
 from secrets import randbelow
+from sys import exc_info
 from typing import List, Dict, TypedDict
 import urllib.request
 
@@ -46,6 +47,7 @@ class Stats(commands.Cog):
         self.soldiersData: Dict[str, SoldierData] = {}
         self.newMembersIds: List[str] = []
         self.messages: List[str] = []
+        self.messages_test: List[str] = []
         self.new_messages: List[str] = []
 
     def muDataLink(self, muId: str) -> str:
@@ -56,9 +58,15 @@ class Stats(commands.Cog):
         self.GoThroughSoldiersData()
         # old messages
         channel = self.bot.get_channel(811664465829036052)
+        await channel.send("SENDING MESSAGES GATHERED BY GOING THROUGH LIST")
         for message in self.messages:
             await channel.send(message)
         if len(self.messages) == 0:
+            await channel.send("```\nNothing special this time.```")
+        await channel.send("SENDING MESSAGES GATHERED BY GOING THROUGH DICTIONARY")
+        for message in self.messages_test:
+            await channel.send(message)
+        if len(self.messages_test) == 0:
             await channel.send("```\nNothing special this time.```")
         # new messages [WIP]
         channel_beta = self.bot.get_channel(881189575052116028)
@@ -162,23 +170,38 @@ class Stats(commands.Cog):
                 self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.STRENGTH, strengthToPrint))
     
     def AppendMedalsMessage(self, soldierName: str, profileLink: str, oldMedalData: List[MedalData], currentMedalData: List[MedalData]) -> None:
-        # should be adjusted so it takes data from dictionary not one by one
-        for oldData, currentData in zip(oldMedalData, currentMedalData):
-            medalName = oldData["name"]
-            scale = medalsAndScale[medalName]
-            if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
-                scale = 1000
-            if oldData["count"] < currentData["count"]:
-                newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
-                for x in newMedalsRange:
-                    if x % scale == 0:
-                        self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
-                        if len(self.new_messages) > 0:
-                            last_message = self.new_messages[-1]
-                            if soldierName in last_message and medalName in last_message:
-                                self.new_messages.remove(last_message)
-                        self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
-                            newNumberMilestone=x, newTextMilestone=medalName))
+        try:
+            for medalName, medalScale in medalsAndScale.items():
+                scale = medalScale
+                if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
+                    scale = 1000
+                oldMedal = next(medal for medal in oldMedalData if medal["name"] == medalName, None)
+                currentMedal = next(medal for medal in currentMedalData if medal["name"] == medalName, None)
+                if oldMedal and currentMedal and oldMedal["count"] < currentMedal["count"]:
+                    medalsRange: range[int] = range(oldMedal["count"] + 1, currentMedal["count"] + 1)
+                    for x in medalsRange:
+                        if x % scale == 0:
+                            self.messages_test.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
+        except:
+            print(f"Unexpected error: {exc_info()[0]}")
+        finally:
+            # should be adjusted so it takes data from dictionary not one by one
+            for oldData, currentData in zip(oldMedalData, currentMedalData):
+                medalName = oldData["name"]
+                scale = medalsAndScale[medalName]
+                if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
+                    scale = 1000
+                if oldData["count"] < currentData["count"]:
+                    newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
+                    for x in newMedalsRange:
+                        if x % scale == 0:
+                            self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
+                            if len(self.new_messages) > 0:
+                                last_message = self.new_messages[-1]
+                                if soldierName in last_message and medalName in last_message:
+                                    self.new_messages.remove(last_message)
+                            self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
+                                newNumberMilestone=x, newTextMilestone=medalName))
 
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
         if currentGroundRank > oldGroundRank:
