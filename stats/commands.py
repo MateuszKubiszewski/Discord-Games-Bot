@@ -175,8 +175,8 @@ class Stats(commands.Cog):
                 scale = medalScale
                 if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
                     scale = 1000
-                oldMedal = next(medal for medal in oldMedalData if medal["name"] == medalName, None)
-                currentMedal = next(medal for medal in currentMedalData if medal["name"] == medalName, None)
+                oldMedal = next((medal for medal in oldMedalData if medal["name"] == medalName), None)
+                currentMedal = next((medal for medal in currentMedalData if medal["name"] == medalName), None)
                 if oldMedal and currentMedal and oldMedal["count"] < currentMedal["count"]:
                     medalsRange: range[int] = range(oldMedal["count"] + 1, currentMedal["count"] + 1)
                     for x in medalsRange:
