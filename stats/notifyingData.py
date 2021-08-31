@@ -13,7 +13,8 @@ englishPlayers = [
 femalePlayers = [
     "Anike8",
     "Kasia59",
-    "somegirl13"
+    "somegirl13",
+    "tschaya"
 ]
 
 soldiersToNotifyDiscordIds = {
@@ -52,6 +53,7 @@ soldiersToNotifyDiscordIds = {
     "Thomas Green": 224141362189172736,
     "Tomko.": 573906699778392075,
     "Toszek.92": 440613917023141888,
+    "tschaya": 861616317303881748,
     "Uzury Zezre": 314644011371462657,
     "Vogel Serapel": 392293513724690444,
     "WujekKaczorek": 319140436662943754
