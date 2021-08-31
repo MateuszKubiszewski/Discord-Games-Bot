@@ -72,5 +72,6 @@ Ciekawostki = [
     "Największym wrogiem tygrysa jest człowiek i azjatycka medycyna ludowa. Części ciała tygrysa wykorzystywane są w medycynie ludowej jako afrodyzjaki.",
     "Tygrysy są symbolem kultury Dalekiego Wschodu. Szczególną czcią otaczane są tygrysy białe, które w Chinach są królami zwierząt, w buddyzmie - symbolem gościnności i pobożności, W Japonii - jednym z czterech dobrych duchów.",
     "Tygrys jest jedną z najpopularniejszych maskotek drużyn sportowych.",
-    "Międzynarodowy Dzień Tygrysa przypada na 29 lipca."
+    "Międzynarodowy Dzień Tygrysa przypada na 29 lipca.",
+    "Kelak paskowany to gatunek tygrysa znany ze swojego długiego, zawodząco-marudnego ryku, na dźwięk którego uciekają wszystkie zwierzęta w promieniu kilku mil. Ów straszny odgłos potrafi wydawać nawet do kilku razy dziennie."
 ]
