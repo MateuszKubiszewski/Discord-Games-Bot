@@ -257,7 +257,7 @@ class Stats(commands.Cog):
         elif notificationType == NotificationType.STRENGTH:
             message += f"{newNumberMilestone} strength!"
         elif notificationType == NotificationType.MEDAL:
-            message == f"{newNumberMilestone} {newTextMilestone} medals!"
+            message += f"{newNumberMilestone} {newTextMilestone} medals!"
         else:
             message += f"{newTextMilestone}!"
         return message
@@ -274,7 +274,7 @@ class Stats(commands.Cog):
         elif notificationType == NotificationType.STRENGTH:
             message += f"{newNumberMilestone} punktów siły!"
         elif notificationType == NotificationType.MEDAL:
-            message == f"{newNumberMilestone} medali {newTextMilestone}!"
+            message += f"{newNumberMilestone} medali {newTextMilestone}!"
         else:
             message += f"rangę {newTextMilestone}!"
         return message
