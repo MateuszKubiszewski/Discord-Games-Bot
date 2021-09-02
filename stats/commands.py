@@ -217,7 +217,7 @@ class Stats(commands.Cog):
                 for i in range(oldAirRank + 1, currentAirRank + 1):
                     self.messages.append(f"```\n{soldierName} reached {airRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
-                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentAirRank]))
+                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=airRanks[currentAirRank]))
 
     def PrepareImage(self, message: str) -> None:
         imageIndex = randbelow(45) + 1
