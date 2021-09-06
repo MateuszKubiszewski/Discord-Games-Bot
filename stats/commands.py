@@ -219,11 +219,11 @@ class Stats(commands.Cog):
         PATRIOT_IMAGES_AMOUNT = 4
         OTHER_IMAGES_AMOUNT = 7
         # Ground Image Condition
-        if any(groundRank in message for groundRank in groundRanks) or any(groundMedal in message for groundMedal in groundMedals):
+        if any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
             imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
             return f"images/tank/{imageIndex}"
         # Air Image Condition
-        elif any(airRank in message for airRank in airRanks) or any(airMedal in message for airMedal in airMedals):
+        elif any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
             imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
             return f"images/air/{imageIndex}"
         # Patriot Image Condition
