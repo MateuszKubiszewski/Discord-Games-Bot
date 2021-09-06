@@ -4,29 +4,9 @@ __pycache__/
 *$py.class
 
 # Custom
-env_Bot/
-Od_Maxia/
+kosz/
 .vscode/
-resources/
-familiada_skriny.png
 hangman/
-test.py
-test2.py
-test.txt
-help_dowodca.png
-help_zolnierz.png
-soldiers.txt
-soldiers_list.txt
-punkty.txt
-zapasowy.py
-prawda.txt
-stats.txt
-log.txt
-suchary_*
-spying-stats.txt
-pillow-test.py
-images/
-fonts/
 
 # C extensions
 *.so

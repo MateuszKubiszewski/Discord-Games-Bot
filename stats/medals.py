@@ -13,6 +13,26 @@ medalsAndScale = {
     "Prestige Hunter": 10
 }
 
+airMedals = [
+    "Sky Hero",
+    "Top Aviator"
+]
+
+groundMedals = [
+    "Battle Hero",
+    "Campaign Hero",
+    "Top Fighter"
+]
+
+otherMedals = [
+    "Freedom Fighter",
+    "Congress Member",
+    "Country President",
+    "Resistance Hero",
+    "Mercenary",
+    "Prestige Hunter"
+]
+
 index = {
     "Freedom Fighter": 0,
     "Hard Worker": 1,

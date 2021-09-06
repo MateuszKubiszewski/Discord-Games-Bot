@@ -1,3 +1,4 @@
+from botocore.exceptions import PaginationError
 from discord import File as discordFile
 from discord.ext import commands
 from io import BytesIO
@@ -9,16 +10,11 @@ from typing import List, Dict, TypedDict
 import urllib.request
 
 from amazons3 import S3
-from .additionalIds import additionalCitizenIds
-from .additionalIds import militaryUnitIds
+from .additionalIds import additionalCitizenIds, militaryUnitIds
 from .airRanks import airRanks
 from .groundRanks import groundRanks
-from .notifyingData import englishPlayers
-from .notifyingData import femalePlayers
-from .notifyingData import NotificationType
-from .notifyingData import soldiersToNotifyDiscordIds
-from .medals import medalsAndScale
-from .medals import index
+from .notifyingData import englishPlayers, femalePlayers, NotificationType, soldiersToNotifyDiscordIds
+from .medals import medalsAndScale, airMedals, groundMedals, otherMedals, index
 
 class ImageData(TypedDict):
     player: str
@@ -47,8 +43,7 @@ class Stats(commands.Cog):
         self.soldiersData: Dict[str, SoldierData] = {}
         self.newMembersIds: List[str] = []
         self.messages: List[str] = []
-        self.messages_test: List[str] = []
-        self.new_messages: List[str] = []
+        self.imageMessages: List[str] = []
 
     def muDataLink(self, muId: str) -> str:
         return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
@@ -56,22 +51,16 @@ class Stats(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.GoThroughSoldiersData()
-        # old messages
+        # old text messages
         channel = self.bot.get_channel(811664465829036052)
-        await channel.send("SENDING MESSAGES GATHERED BY GOING THROUGH LIST")
         for message in self.messages:
             await channel.send(message)
         if len(self.messages) == 0:
-            await channel.send("```\nNothing special this time.```")
-        await channel.send("SENDING MESSAGES GATHERED BY GOING THROUGH DICTIONARY")
-        for message in self.messages_test:
-            await channel.send(message)
-        if len(self.messages_test) == 0:
-            await channel.send("```\nNothing special this time.```")
-        # new messages [WIP]
+            await channel.send("```\nNobody to congratulate this time.```")
+        # new image messages [WIP]
         channel_beta = self.bot.get_channel(881189575052116028)
-        for new_message in self.new_messages:
-            self.PrepareImage(new_message)
+        for imageMessage in self.imageMessages:
+            self.PrepareImage(imageMessage)
             await channel_beta.send(file=discordFile("result.png"))
 
     def GoThroughSoldiersData(self) -> None:
@@ -152,7 +141,7 @@ class Stats(commands.Cog):
                 if currentExpLevel < 50:
                     levelToPrint = 35
                 self.messages.append(f"```\n{soldierName} reached level {levelToPrint}.\nProfile link: {profileLink}.```")
-                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.EXP, levelToPrint))
+                self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.EXP, levelToPrint))
     
     def AppendStrengthMessage(self, soldierName: str, profileLink: str, oldStrength: int, currentStrength: int) -> None:
         if oldStrength < currentStrength:
@@ -167,41 +156,26 @@ class Stats(commands.Cog):
             if all(bigStrengthRules) or all(smallStrengthRules):
                 strengthToPrint = int(round(currentStrength, -3))
                 self.messages.append(f"```\n{soldierName} reached {strengthToPrint} strength.\nProfile link: {profileLink}.```")
-                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.STRENGTH, strengthToPrint))
+                self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.STRENGTH, strengthToPrint))
     
     def AppendMedalsMessage(self, soldierName: str, profileLink: str, oldMedalData: List[MedalData], currentMedalData: List[MedalData]) -> None:
-        try:
-            for medalName, medalScale in medalsAndScale.items():
-                scale = medalScale
-                if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
-                    scale = 1000
-                oldMedal = next((medal for medal in oldMedalData if medal["name"] == medalName), None)
-                currentMedal = next((medal for medal in currentMedalData if medal["name"] == medalName), None)
-                if oldMedal and currentMedal and oldMedal["count"] < currentMedal["count"]:
-                    medalsRange: range[int] = range(oldMedal["count"] + 1, currentMedal["count"] + 1)
-                    for x in medalsRange:
-                        if x % scale == 0:
-                            self.messages_test.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
-        except:
-            print(f"Unexpected error: {exc_info()[0]}")
-        finally:
-            # should be adjusted so it takes data from dictionary not one by one
-            for oldData, currentData in zip(oldMedalData, currentMedalData):
-                medalName = oldData["name"]
-                scale = medalsAndScale[medalName]
-                if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
-                    scale = 1000
-                if oldData["count"] < currentData["count"]:
-                    newMedalsRange: range[int] = range(oldData["count"] + 1, currentData["count"] + 1)
-                    for x in newMedalsRange:
-                        if x % scale == 0:
-                            self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
-                            if len(self.new_messages) > 0:
-                                last_message = self.new_messages[-1]
-                                if soldierName in last_message and medalName in last_message:
-                                    self.new_messages.remove(last_message)
-                            self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
-                                newNumberMilestone=x, newTextMilestone=medalName))
+        for medalName, medalScale in medalsAndScale.items():
+            scale = medalScale
+            if soldierName == "Tomko." and medalName == "Battle Hero" or medalName == "True Patriot":
+                scale = 1000
+            oldMedal = next((medal for medal in oldMedalData if medal["name"] == medalName), None)
+            currentMedal = next((medal for medal in currentMedalData if medal["name"] == medalName), None)
+            if oldMedal and currentMedal and oldMedal["count"] < currentMedal["count"]:
+                medalsRange: range[int] = range(oldMedal["count"] + 1, currentMedal["count"] + 1)
+                for x in medalsRange:
+                    if x % scale == 0:
+                        self.messages.append(f"```\n{soldierName} reached {x} {medalName} medals.\nProfile link: {profileLink}.```")
+                        if len(self.imageMessages) > 0:
+                            lastMessage = self.imageMessages[-1]
+                            if soldierName in lastMessage and medalName in lastMessage:
+                                self.imageMessages.remove(lastMessage)
+                        self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.MEDAL,
+                            newNumberMilestone=x, newTextMilestone=medalName))
 
     def AppendGroundRankMessage(self, soldierName: str, profileLink: str, oldGroundRank: int, currentGroundRank: int) -> None:
         if currentGroundRank > oldGroundRank:
@@ -209,7 +183,7 @@ class Stats(commands.Cog):
                 for i in range(oldGroundRank + 1, currentGroundRank + 1):
                     self.messages.append(f"```\n{soldierName} reached {groundRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
-                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentGroundRank]))
+                self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=groundRanks[currentGroundRank]))
 
     def AppendAirRankMessage(self, soldierName: str, profileLink: str, oldAirRank: int, currentAirRank: int) -> None:
         if currentAirRank > oldAirRank:
@@ -217,11 +191,10 @@ class Stats(commands.Cog):
                 for i in range(oldAirRank + 1, currentAirRank + 1):
                     self.messages.append(f"```\n{soldierName} reached {airRanks[i]}.```")
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
-                self.new_messages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=airRanks[currentAirRank]))
+                self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=airRanks[currentAirRank]))
 
     def PrepareImage(self, message: str) -> None:
-        imageIndex = randbelow(45) + 1
-        imageFromS3 = S3.readImage(f"images/{imageIndex}.png")
+        imageFromS3 = S3.readImage(self.GetImagePath(message))
         img = Image.open(BytesIO(imageFromS3))
         editable_img = ImageDraw.Draw(img)
         image_width = img.width
@@ -239,6 +212,27 @@ class Stats(commands.Cog):
         editable_img.text(((image_width - w) / 2, image_height - 96), message, fill="white", font=myFont)
         editable_img.text(((image_width - w2) / 2, image_height - 50), "Gratulacje!", fill="white", font=myFont)
         img.save("result.png", "PNG")
+    
+    def GetImagePath(self, message: str) -> str:
+        GROUND_IMAGES_AMOUNT = 24
+        AIR_IMAGES_AMOUNT = 9
+        PATRIOT_IMAGES_AMOUNT = 4
+        OTHER_IMAGES_AMOUNT = 7
+        # Ground Image Condition
+        if any(groundRank in message for groundRank in groundRanks) or any(groundMedal in message for groundMedal in groundMedals):
+            imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
+            return f"images/tank/{imageIndex}"
+        # Air Image Condition
+        elif any(airRank in message for airRank in airRanks) or any(airMedal in message for airMedal in airMedals):
+            imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
+            return f"images/air/{imageIndex}"
+        # Patriot Image Condition
+        elif "True Patriot" in message:
+            imageIndex = randbelow(PATRIOT_IMAGES_AMOUNT) + 1
+            return f"images/TP/{imageIndex}"
+        else:
+            imageIndex = randbelow(OTHER_IMAGES_AMOUNT) + 1
+            return f"images/TP/{imageIndex}"
     
     def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
         if player in englishPlayers:
@@ -274,7 +268,12 @@ class Stats(commands.Cog):
         elif notificationType == NotificationType.STRENGTH:
             message += f"{newNumberMilestone} punktów siły!"
         elif notificationType == NotificationType.MEDAL:
-            message += f"{newNumberMilestone} medali {newTextMilestone}!"
+            if newNumberMilestone == 1:
+                message += f"{newNumberMilestone} medal {newTextMilestone}!"
+            elif newNumberMilestone in [2, 3, 4]:
+                message += f"{newNumberMilestone} medale {newTextMilestone}!"
+            else:
+                message += f"{newNumberMilestone} medali {newTextMilestone}!"
         else:
             message += f"rangę {newTextMilestone}!"
         return message
