@@ -221,18 +221,18 @@ class Stats(commands.Cog):
         # Ground Image Condition
         if any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
             imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
-            return f"images/tank/{imageIndex}"
+            return f"images/tank/{imageIndex}.png"
         # Air Image Condition
         elif any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
             imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
-            return f"images/air/{imageIndex}"
+            return f"images/air/{imageIndex}.png"
         # Patriot Image Condition
         elif "True Patriot" in message:
             imageIndex = randbelow(PATRIOT_IMAGES_AMOUNT) + 1
-            return f"images/TP/{imageIndex}"
+            return f"images/TP/{imageIndex}.png"
         else:
             imageIndex = randbelow(OTHER_IMAGES_AMOUNT) + 1
-            return f"images/TP/{imageIndex}"
+            return f"images/inne/{imageIndex}.png"
     
     def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
         if player in englishPlayers:
