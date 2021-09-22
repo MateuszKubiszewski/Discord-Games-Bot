@@ -204,8 +204,8 @@ class Stats(commands.Cog):
         myFont = ImageFont.truetype(font, 40)
         w, h = myFont.getsize(message)
         w2, h2 = myFont.getsize("Gratulacje!")
-        if w > image_width:
-            myFont = ImageFont.truetype(font, 35)
+        if w > image_width - 200:
+            myFont = ImageFont.truetype(font, 30)
             w, h = myFont.getsize(message)
             w2, h2 = myFont.getsize("Gratulacje!")
 
@@ -218,14 +218,14 @@ class Stats(commands.Cog):
         AIR_IMAGES_AMOUNT = 9
         PATRIOT_IMAGES_AMOUNT = 4
         OTHER_IMAGES_AMOUNT = 7
-        # Ground Image Condition
-        if any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
-            imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
-            return f"images/tank/{imageIndex}.png"
         # Air Image Condition
-        elif any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
+        if any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
             imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
             return f"images/air/{imageIndex}.png"
+        # Ground Image Condition
+        elif any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
+            imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
+            return f"images/tank/{imageIndex}.png"
         # Patriot Image Condition
         elif "True Patriot" in message:
             imageIndex = randbelow(PATRIOT_IMAGES_AMOUNT) + 1
