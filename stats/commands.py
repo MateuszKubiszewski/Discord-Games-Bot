@@ -6,7 +6,7 @@ import json
 from PIL import Image, ImageDraw, ImageFont
 from secrets import randbelow
 from sys import exc_info
-from typing import List, Dict, TypedDict
+from typing import List, Dict, Tuple, TypedDict
 import urllib.request
 
 from amazons3 import S3
@@ -193,8 +193,8 @@ class Stats(commands.Cog):
                 self.messages.append(f"```\nProfile link: {profileLink}.```")
                 self.imageMessages.append(self.GetMessageToPrintOnImage(soldierName, NotificationType.RANK, newTextMilestone=airRanks[currentAirRank]))
 
-    def PrepareImage(self, message: str) -> None:
-        imageFromS3 = S3.readImage(self.GetImagePath(message))
+    def PrepareImage(self, message: Tuple[str, str]) -> None:
+        imageFromS3 = S3.readImage(self.GetImagePath(message[0]))
         img = Image.open(BytesIO(imageFromS3))
         editable_img = ImageDraw.Draw(img)
         image_width = img.width
@@ -202,15 +202,15 @@ class Stats(commands.Cog):
         
         font = S3.readFont("fonts/DejaVuSans.ttf")
         myFont = ImageFont.truetype(font, 40)
-        w, h = myFont.getsize(message)
-        w2, h2 = myFont.getsize("Gratulacje!")
+        w, h = myFont.getsize(message[0])
+        w2, h2 = myFont.getsize(message[1])
         if w > image_width - 200:
             myFont = ImageFont.truetype(font, 30)
-            w, h = myFont.getsize(message)
-            w2, h2 = myFont.getsize("Gratulacje!")
+            w, h = myFont.getsize(message[0])
+            w2, h2 = myFont.getsize(message[1])
 
-        editable_img.text(((image_width - w) / 2, image_height - 96), message, fill="white", font=myFont)
-        editable_img.text(((image_width - w2) / 2, image_height - 50), "Gratulacje!", fill="white", font=myFont)
+        editable_img.text(((image_width - w) / 2, image_height - 96), message[0], fill="white", font=myFont)
+        editable_img.text(((image_width - w2) / 2, image_height - 50), message[1], fill="white", font=myFont)
         img.save("result.png", "PNG")
     
     def GetImagePath(self, message: str) -> str:
@@ -234,11 +234,11 @@ class Stats(commands.Cog):
             imageIndex = randbelow(OTHER_IMAGES_AMOUNT) + 1
             return f"images/inne/{imageIndex}.png"
     
-    def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
+    def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> Tuple[str, str]:
         if player in englishPlayers:
-            return self.GetEnglishMessage(player, notificationType, newNumberMilestone, newTextMilestone)
+            return (self.GetEnglishMessage(player, notificationType, newNumberMilestone, newTextMilestone), "Congratulations!")
         else:
-            return self.GetPolishMessage(player, notificationType, newNumberMilestone, newTextMilestone)
+            return (self.GetPolishMessage(player, notificationType, newNumberMilestone, newTextMilestone), "Gratulacje!")
 
     def GetEnglishMessage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> str:
         # XY reached level XX!
