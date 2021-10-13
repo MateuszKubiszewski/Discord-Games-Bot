@@ -1,4 +1,5 @@
 from botocore.exceptions import PaginationError
+from datetime import datetime
 from discord import File as discordFile
 from discord.ext import commands
 from io import BytesIO
@@ -214,16 +215,27 @@ class Stats(commands.Cog):
         img.save("result.png", "PNG")
     
     def GetImagePath(self, message: str) -> str:
-        GROUND_IMAGES_AMOUNT = 24
-        AIR_IMAGES_AMOUNT = 9
-        PATRIOT_IMAGES_AMOUNT = 4
-        OTHER_IMAGES_AMOUNT = 7
+        GROUND_IMAGES_AMOUNT = 26
+        AIR_IMAGES_AMOUNT = 11
+        PATRIOT_IMAGES_AMOUNT = 5
+        OTHER_IMAGES_AMOUNT = 10
+        HALLOWEEN_GROUND_AMOUNT = 13
+        HALLOWEEN_AIR_AMOUNT = 4
+        now = datetime.now()
+        currentMonth = now.month
+        currentDay = now.day
         # Air Image Condition
         if any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
+            if (currentDay > 24 and currentMonth == 10) or (currentDay < 6 and currentMonth == 11):
+                imageIndex = randbelow(HALLOWEEN_AIR_AMOUNT) + 1
+                return f"images/airhalloween/{imageIndex}.png"
             imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
             return f"images/air/{imageIndex}.png"
         # Ground Image Condition
         elif any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
+            if (currentDay > 24 and currentMonth == 10) or (currentDay < 6 and currentMonth == 11):
+                imageIndex = randbelow(HALLOWEEN_GROUND_AMOUNT) + 1
+                return f"images/tankhalloween/{imageIndex}.png"
             imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
             return f"images/tank/{imageIndex}.png"
         # Patriot Image Condition

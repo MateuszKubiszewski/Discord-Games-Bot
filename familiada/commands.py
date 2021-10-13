@@ -155,6 +155,7 @@ class Familiada(commands.Cog):
             await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def punkty(self, ctx):
         if self.current_question == -1:
             return
