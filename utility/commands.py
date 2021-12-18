@@ -25,7 +25,7 @@ class Utility(commands.Cog):
         militaryUnitData = json.loads(self.GetPageData('https://www.erepublik.com/en/military/military-unit-data/?groupId=2256&panel=members'))
         membersID: List[int] = militaryUnitData["panelContents"]["membersList"]
         for ID in membersID:
-            citizenData = self.GetPageData(f'https://www.erepublik.com/en/main/citizen-profile-json/{str(ID)}')
+            citizenData = json.loads(self.GetPageData(f'https://www.erepublik.com/en/main/citizen-profile-json/{str(ID)}'))
             data += f'{citizenData["citizen"]["name"]}: https://www.erepublik.com/en/citizen/profile/{str(ID)}\n'
         with open('soldiers_list.txt', 'w+') as f:
             f.write(data)

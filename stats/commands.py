@@ -45,6 +45,12 @@ class Stats(commands.Cog):
         self.newMembersIds: List[str] = []
         self.messages: List[str] = []
         self.imageMessages: List[str] = []
+        self.usedImages: Dict[str, List[int]] = {
+            "USED_AIR": [],
+            "USED_GROUND": [],
+            "USED_TP": [],
+            "USED_OTHER": []
+        }
 
     def muDataLink(self, muId: str) -> str:
         return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
@@ -61,8 +67,12 @@ class Stats(commands.Cog):
         # new image messages [WIP]
         channel_beta = self.bot.get_channel(881189575052116028)
         for imageMessage in self.imageMessages:
-            self.PrepareImage(imageMessage)
-            await channel_beta.send(file=discordFile("result.png"))
+            try:
+                self.PrepareImage(imageMessage)
+                await channel_beta.send(file=discordFile("result.png"))
+            except OSError:
+                print("PIL OSError - Font didn't load")
+                await channel_beta.send("Problem z czczionka :(")
 
     def GoThroughSoldiersData(self) -> None:
         oldSoldiersData = self.ReadSoldiersDataFromDatabase()
@@ -219,6 +229,8 @@ class Stats(commands.Cog):
         AIR_IMAGES_AMOUNT = 11
         PATRIOT_IMAGES_AMOUNT = 5
         OTHER_IMAGES_AMOUNT = 10
+        CHRISTMAS_GROUND_AMOUNT = 12
+        CHRISTMAS_AIR_AMOUNT = 13
         HALLOWEEN_GROUND_AMOUNT = 13
         HALLOWEEN_AIR_AMOUNT = 4
         now = datetime.now()
@@ -226,26 +238,44 @@ class Stats(commands.Cog):
         currentDay = now.day
         # Air Image Condition
         if any(airRank in message for airRank in airRanks.values()) or any(airMedal in message for airMedal in airMedals):
+            # Christmas
+            if (currentDay > 22 and currentMonth == 12) or (currentDay < 7 and currentMonth == 1):
+                imageIndex = self.GetUniqueImageIndex("USED_AIR", CHRISTMAS_AIR_AMOUNT)
+                return f"images/airchristmas/{imageIndex}.png"
+            # Halloween
             if (currentDay > 24 and currentMonth == 10) or (currentDay < 6 and currentMonth == 11):
-                imageIndex = randbelow(HALLOWEEN_AIR_AMOUNT) + 1
+                imageIndex = self.GetUniqueImageIndex("USED_AIR", HALLOWEEN_AIR_AMOUNT)
                 return f"images/airhalloween/{imageIndex}.png"
-            imageIndex = randbelow(AIR_IMAGES_AMOUNT) + 1
+            imageIndex = self.GetUniqueImageIndex("USED_AIR", AIR_IMAGES_AMOUNT)
             return f"images/air/{imageIndex}.png"
         # Ground Image Condition
         elif any(groundRank in message for groundRank in groundRanks.values()) or any(groundMedal in message for groundMedal in groundMedals):
+            # Christmas
+            if (currentDay > 22 and currentMonth == 12) or (currentDay < 7 and currentMonth == 1):
+                imageIndex = self.GetUniqueImageIndex("USED_GROUND", CHRISTMAS_GROUND_AMOUNT)
+                return f"images/tankchristmas/{imageIndex}.png"
+            # Halloween
             if (currentDay > 24 and currentMonth == 10) or (currentDay < 6 and currentMonth == 11):
-                imageIndex = randbelow(HALLOWEEN_GROUND_AMOUNT) + 1
+                imageIndex = self.GetUniqueImageIndex("USED_GROUND", HALLOWEEN_GROUND_AMOUNT)
                 return f"images/tankhalloween/{imageIndex}.png"
-            imageIndex = randbelow(GROUND_IMAGES_AMOUNT) + 1
+            imageIndex = self.GetUniqueImageIndex("USED_GROUND", GROUND_IMAGES_AMOUNT)
             return f"images/tank/{imageIndex}.png"
         # Patriot Image Condition
         elif "True Patriot" in message:
-            imageIndex = randbelow(PATRIOT_IMAGES_AMOUNT) + 1
+            imageIndex = self.GetUniqueImageIndex("USED_TP", PATRIOT_IMAGES_AMOUNT)
             return f"images/TP/{imageIndex}.png"
         else:
-            imageIndex = randbelow(OTHER_IMAGES_AMOUNT) + 1
+            imageIndex = self.GetUniqueImageIndex("USED_OTHER", OTHER_IMAGES_AMOUNT)
             return f"images/inne/{imageIndex}.png"
     
+    def GetUniqueImageIndex(self, imagesType: str, imagesCount: int):
+        imageIndex = randbelow(imagesCount) + 1
+        if len(self.usedImages[imagesType]) < imagesCount:
+            while imageIndex in self.usedImages[imagesType]:
+                imageIndex = randbelow(imagesCount) + 1
+            self.usedImages[imagesType].append(imageIndex)
+        return imageIndex
+
     def GetMessageToPrintOnImage(self, player: str, notificationType: NotificationType, newNumberMilestone: int = 0, newTextMilestone: str = "") -> Tuple[str, str]:
         if player in englishPlayers:
             return (self.GetEnglishMessage(player, notificationType, newNumberMilestone, newTextMilestone), "Congratulations!")
@@ -263,7 +293,10 @@ class Stats(commands.Cog):
         elif notificationType == NotificationType.STRENGTH:
             message += f"{newNumberMilestone} strength!"
         elif notificationType == NotificationType.MEDAL:
-            message += f"{newNumberMilestone} {newTextMilestone} medals!"
+            if newNumberMilestone == 1:
+                message += f"first {newTextMilestone} medal!"
+            else:
+                message += f"{newNumberMilestone} {newTextMilestone} medals!"
         else:
             message += f"{newTextMilestone}!"
         return message
@@ -281,7 +314,7 @@ class Stats(commands.Cog):
             message += f"{newNumberMilestone} punktów siły!"
         elif notificationType == NotificationType.MEDAL:
             if newNumberMilestone == 1:
-                message += f"{newNumberMilestone} medal {newTextMilestone}!"
+                message += f"pierwszy medal {newTextMilestone}!"
             elif newNumberMilestone in [2, 3, 4]:
                 message += f"{newNumberMilestone} medale {newTextMilestone}!"
             else:
