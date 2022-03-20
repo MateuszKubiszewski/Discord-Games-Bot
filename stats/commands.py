@@ -225,10 +225,10 @@ class Stats(commands.Cog):
         img.save("result.png", "PNG")
     
     def GetImagePath(self, message: str) -> str:
-        GROUND_IMAGES_AMOUNT = 26
+        GROUND_IMAGES_AMOUNT = 25
         AIR_IMAGES_AMOUNT = 11
         PATRIOT_IMAGES_AMOUNT = 5
-        OTHER_IMAGES_AMOUNT = 10
+        OTHER_IMAGES_AMOUNT = 8
         CHRISTMAS_GROUND_AMOUNT = 12
         CHRISTMAS_AIR_AMOUNT = 13
         HALLOWEEN_GROUND_AMOUNT = 13
