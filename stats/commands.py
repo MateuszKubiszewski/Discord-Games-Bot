@@ -226,7 +226,7 @@ class Stats(commands.Cog):
     
     def GetImagePath(self, message: str) -> str:
         GROUND_IMAGES_AMOUNT = 25
-        AIR_IMAGES_AMOUNT = 11
+        AIR_IMAGES_AMOUNT = 12
         PATRIOT_IMAGES_AMOUNT = 5
         OTHER_IMAGES_AMOUNT = 8
         CHRISTMAS_GROUND_AMOUNT = 12
