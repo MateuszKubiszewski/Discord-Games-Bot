@@ -9,6 +9,7 @@ import urllib
 
 from amazons3 import S3
 # trzeba wywalic komende daj_link, zapdejtwoac poradnik
+
 class Soldier:
     def __init__(self, erep_id: int, disc: str, name: str):
         self.erep_id = erep_id
@@ -71,7 +72,7 @@ class Zbiorki(commands.Cog):
     
     @commands.command()
     async def wyrejestruj(self, ctx):
-        """Prawidłowy sposób użycia: @wyrejestruj id\nid - Twoje id w eRepublik [same cyferki, znajdziesz je na końcu linku do swojego profilu].
+        """Prawidłowy sposób użycia: @wyrejestruj
         Usuwa użykownika wywołującego komendę z bazy żołnierzy.
         UWAGA: użycie tej komendy spowoduje usunięcie zebranych hitów, jeśli jakieś są."""
         author = ctx.message.author
@@ -81,6 +82,20 @@ class Zbiorki(commands.Cog):
             del self.soldiers[author.id]
             await ctx.send("Papuśki!")
             self.logsoldiers()
+    
+    # TO DO
+    # @commands.command()
+    # async def wyrejestruj_kogos(self, ctx, id: int):
+    #     """Prawidłowy sposób użycia: @wyrejestruj id\nid - Twoje id w eRepublik [same cyferki, znajdziesz je na końcu linku do swojego profilu].
+    #     Usuwa użykownika wywołującego komendę z bazy żołnierzy.
+    #     UWAGA: użycie tej komendy spowoduje usunięcie zebranych hitów, jeśli jakieś są."""
+    #     author = ctx.message.author
+    #     if author.id not in self.soldiers:
+    #         await ctx.send("Obawiam się, że i tak nie byłeś w bazie.")
+    #     else:
+    #         del self.soldiers[author.id]
+    #         await ctx.send("Papuśki!")
+    #         self.logsoldiers()
 
     @commands.command()
     async def join(self, ctx):
