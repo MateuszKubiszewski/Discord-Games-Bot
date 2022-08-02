@@ -83,19 +83,25 @@ class Zbiorki(commands.Cog):
             await ctx.send("Papuśki!")
             self.logsoldiers()
     
-    # TO DO
-    # @commands.command()
-    # async def wyrejestruj_kogos(self, ctx, id: int):
-    #     """Prawidłowy sposób użycia: @wyrejestruj id\nid - Twoje id w eRepublik [same cyferki, znajdziesz je na końcu linku do swojego profilu].
-    #     Usuwa użykownika wywołującego komendę z bazy żołnierzy.
-    #     UWAGA: użycie tej komendy spowoduje usunięcie zebranych hitów, jeśli jakieś są."""
-    #     author = ctx.message.author
-    #     if author.id not in self.soldiers:
-    #         await ctx.send("Obawiam się, że i tak nie byłeś w bazie.")
-    #     else:
-    #         del self.soldiers[author.id]
-    #         await ctx.send("Papuśki!")
-    #         self.logsoldiers()
+    @commands.command()
+    @commands.has_role("Dowództwo")
+    async def wyrejestruj_uzytkownikow(self, ctx, soldiers: commands.Greedy[discord.Member]):
+        """Prawidłowy sposób użycia: @wyrejestruj slap slap slap
+        slap - mention użytkownika na Discordzie razem z @
+        Usuwa użykowników wspomnianych w komendzie z bazy żołnierzy.
+        UWAGA: użycie tej komendy spowoduje usunięcie zebranych hitów, jeśli jakieś są."""
+        for soldier in soldiers:
+            if soldier.id not in self.soldiers:
+                await ctx.send(f"Użytkownika {soldier.display_name} nie znaleziono w bazie.")
+            else:
+                del self.soldiers[soldier.id]
+                await ctx.send(f"See ya {soldier.display_name}!")
+                self.logsoldiers()
+    
+    @wyrejestruj_uzytkownikow.error
+    async def wyrejestruj_uztykownikow_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRole):
+            await ctx.send("```\nBrak uprawnień do użycia tej komendy.```")
 
     @commands.command()
     async def join(self, ctx):
@@ -273,6 +279,7 @@ class Zbiorki(commands.Cog):
     def logsoldiers(self):
         S3.write('soldiers.txt', jsonpickle.encode(self.soldiers, keys=True, indent=4))
         print(jsonpickle.encode(self.soldiers, keys=True, indent=4))
+        pass
 
     def sortsoldiers(self):
         return sorted(self.soldiers.items(), key=lambda x: x[1], reverse=True)

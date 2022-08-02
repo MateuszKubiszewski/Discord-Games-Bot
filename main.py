@@ -10,6 +10,7 @@ from zbiorki import commands as z_comms
 
 # # local run
 # from dotenv import load_dotenv # type: ignore
+# import os
 # load_dotenv()
 # TOKEN = os.getenv('DISCORD_TOKEN')
 
