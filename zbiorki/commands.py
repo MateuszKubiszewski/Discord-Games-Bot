@@ -41,7 +41,8 @@ class Zbiorki(commands.Cog):
             return
         self.opened = True
         self.battle = battle_link
-        await ctx.send("@everyone dołączamy i bijemy wedle wytycznych: " + battle_link)
+        mention = discord.utils.get(ctx.guild.roles, name="Tygrys").mention
+        await ctx.send(f"{mention} dołączamy i bijemy wedle wytycznych: " + battle_link)
         S3.write('prawda.txt', json.dumps(self.opened))
     
     @otworz.error
