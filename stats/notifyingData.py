@@ -14,7 +14,8 @@ femalePlayers = [
     "Anike8",
     "Kasia59",
     "somegirl13",
-    "tschaya"
+    "tschaya",
+    "piatkosia"
 ]
 
 soldiersToNotifyDiscordIds = {
