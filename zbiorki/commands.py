@@ -284,3 +284,6 @@ class Zbiorki(commands.Cog):
 
     def sortsoldiers(self):
         return sorted(self.soldiers.items(), key=lambda x: x[1], reverse=True)
+
+async def setup(bot):
+    await bot.add_cog(Zbiorki(bot))

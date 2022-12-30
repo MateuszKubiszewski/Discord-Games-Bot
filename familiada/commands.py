@@ -181,4 +181,5 @@ class Familiada(commands.Cog):
         ret += "```"
         await ctx.send(ret)
 
-
+async def setup(bot):
+    await bot.add_cog(Familiada(bot))

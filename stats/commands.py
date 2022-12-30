@@ -55,8 +55,12 @@ class Stats(commands.Cog):
     def muDataLink(self, muId: str) -> str:
         return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
 
-    @commands.Cog.listener()
-    async def on_ready(self):
+    # Old version
+    # @commands.Cog.listener()
+    # async def on_ready(self):
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def get_stats(self, ctx):
         self.GoThroughSoldiersData()
         # old text messages
         channel = self.bot.get_channel(811664465829036052)
@@ -64,7 +68,7 @@ class Stats(commands.Cog):
             await channel.send(message)
         if len(self.messages) == 0:
             await channel.send("```\nNobody to congratulate this time.```")
-        # new image messages [WIP]
+        # new image messages
         channel_beta = self.bot.get_channel(881189575052116028)
         for imageMessage in self.imageMessages:
             try:
@@ -212,13 +216,12 @@ class Stats(commands.Cog):
         image_height = img.height
         
         font = S3.readFont("fonts/DejaVuSans.ttf")
-        myFont = ImageFont.truetype(font, 40)
-        w, h = myFont.getsize(message[0])
-        w2, h2 = myFont.getsize(message[1])
-        if w > image_width - 200:
-            myFont = ImageFont.truetype(font, 30)
+        for font_size in [40, 35, 30, 25, 20, 15, 10]:
+            myFont = ImageFont.truetype(font, font_size)
             w, h = myFont.getsize(message[0])
             w2, h2 = myFont.getsize(message[1])
+            if w <= image_width - 200:
+                break
 
         editable_img.text(((image_width - w) / 2, image_height - 96), message[0], fill="white", font=myFont)
         editable_img.text(((image_width - w2) / 2, image_height - 50), message[1], fill="white", font=myFont)
@@ -322,3 +325,6 @@ class Stats(commands.Cog):
         else:
             message += f"rangę {newTextMilestone}!"
         return message
+
+async def setup(bot):
+    await bot.add_cog(Stats(bot))

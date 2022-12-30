@@ -122,3 +122,5 @@ class Utility(commands.Cog):
         content = urllib.request.urlopen(page).read()
         return content.decode('ISO-8859-1')
 
+async def setup(bot):
+    await bot.add_cog(Utility(bot))

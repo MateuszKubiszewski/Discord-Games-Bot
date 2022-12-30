@@ -15,8 +15,12 @@ class Spying(commands.Cog):
     def muDataLink(self, muId: str) -> str:
         return f'https://www.erepublik.com/en/military/military-unit-data/?groupId={muId}&panel=members'
 
-    @commands.Cog.listener()
-    async def on_ready(self):
+    # Old version
+    # @commands.Cog.listener()
+    # async def on_ready(self):
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def spy(self, ctx):
         self.GoThroughSoldiersIds()
         channel = self.bot.get_channel(811664465829036052)
         for message in self.messages:
@@ -54,3 +58,6 @@ class Spying(commands.Cog):
 
     def SaveSoldiersIds(self, ids: Dict[str, List[str]]) -> None:
         S3.write('spying-ids.txt', json.dumps(ids))
+
+async def setup(bot):
+    await bot.add_cog(Spying(bot))
