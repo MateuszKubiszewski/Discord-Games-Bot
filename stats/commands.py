@@ -77,6 +77,8 @@ class Stats(commands.Cog):
             except OSError:
                 print("PIL OSError - Font didn't load")
                 await channel_beta.send("Problem z czczionka :(")
+        self.messages.clear()
+        self.imageMessages.clear()
 
     def GoThroughSoldiersData(self) -> None:
         oldSoldiersData = self.ReadSoldiersDataFromDatabase()

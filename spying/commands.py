@@ -27,6 +27,7 @@ class Spying(commands.Cog):
             await channel.send(message)
         if len(self.messages) == 0:
             await channel.send("```\nNothing special this time.```")
+        self.messages.clear()
 
     def GoThroughSoldiersIds(self) -> None:
         oldSoldiersIds = self.ReadSoldiersIdsFromDatabase()

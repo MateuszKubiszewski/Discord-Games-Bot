@@ -7,6 +7,7 @@ __pycache__/
 kosz/
 .vscode/
 hangman/
+obrazki-moje/
 
 # C extensions
 *.so
